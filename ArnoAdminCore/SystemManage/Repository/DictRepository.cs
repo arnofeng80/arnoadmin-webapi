@@ -1,0 +1,25 @@
+﻿using ArnoAdminCore.Base.Repository;
+using ArnoAdminCore.SystemManage.Context;
+using ArnoAdminCore.SystemManage.Models.Poco;
+using ArnoAdminCore.Base.Constants;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ArnoAdminCore.SystemManage.Repository
+{
+    public class DictRepository : BaseRepository<Dict>
+    {
+        public DictRepository(SystemDbContext context)
+        {
+            this._context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public async Task<IEnumerable<Dict>> FindByCodeAsync(String dictCode)
+        {
+            return await _context.Set<Dict>().Where(x => x.Deleted == 0 && x.Status == DictConst.NORMAL_ENABLE && x.DictCode == dictCode.Trim()).OrderBy(x => x.DictSort).ToListAsync();
+        }
+    }
+}
