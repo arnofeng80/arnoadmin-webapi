@@ -51,6 +51,7 @@ namespace ArnoAdminWebApi
             services.AddScoped<UserRepository>();
             services.AddScoped<DictRepository>();
             services.AddScoped<SysConfigRepository>();
+            services.AddScoped<MenuRepository>();
             services.AddDbContext<SystemDbContext>(options =>
                    options.UseSqlServer(GlobalContext.SystemConfig.DBConnectionString));
         }

@@ -13,9 +13,6 @@ namespace ArnoAdminCore.SystemManage.Repository
 {
     public class DepartmentRepository : BaseRepository<Department>
     {
-        public DepartmentRepository(SystemDbContext context) : base(context)
-        {
-            //this._context = context ?? throw new ArgumentNullException(nameof(context));
-        }
+        public DepartmentRepository(SystemDbContext context) : base(context) { }
     }
 }

@@ -7,8 +7,9 @@ using System.Text;
 
 namespace ArnoAdminCore.SystemManage.Repository
 {
-    public class UserRepository : BaseRepository<User>
+    public class MenuRepository : BaseRepository<Menu>
     {
-        public UserRepository(SystemDbContext context) : base(context) { }
+        public MenuRepository(SystemDbContext context) : base(context)  { }
+
     }
 }

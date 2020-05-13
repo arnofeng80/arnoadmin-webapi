@@ -29,6 +29,7 @@ namespace ArnoAdminCore.SystemManage.Context
             modelBuilder.ApplyConfiguration(new UserConfig());
             modelBuilder.ApplyConfiguration(new DictConfig());
             modelBuilder.ApplyConfiguration(new SysConfigConfig());
+            modelBuilder.ApplyConfiguration(new MenuConfig());
             base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<User>().HasOne(x => x.Department).WithMany(x => x.Users)
             //    .HasForeignKey(x => x.DeptId).OnDelete(DeleteBehavior.Restrict);

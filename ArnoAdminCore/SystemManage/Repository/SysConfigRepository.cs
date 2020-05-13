@@ -12,9 +12,7 @@ namespace ArnoAdminCore.SystemManage.Repository
 {
     public class SysConfigRepository : BaseRepository<SysConfig>
     {
-        public SysConfigRepository(SystemDbContext context) : base(context)
-        {
-        }
+        public SysConfigRepository(SystemDbContext context) : base(context) { }
 
         public async Task<IEnumerable<SysConfig>> FindByKeyAsync(String configKey)
         {
