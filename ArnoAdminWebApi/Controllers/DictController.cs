@@ -78,16 +78,11 @@ namespace ArnoAdminWebApi.Controllers
         //    return Result.Ok();
         //}
 
-        [HttpDelete("{ids}")]
-        public async Task<Result> Delete(
-            [ModelBinder(BinderType = typeof(ArrayModelBinder))]
-            IEnumerable<long> ids)
+        [HttpDelete("{id}")]
+        public async Task<Result> Delete(long id)
         {
-            foreach(long id in ids)
-            {
-                _dictRepo.Delete(long.Parse(id));
-            }
-            
+            _dictRepo.Delete(id);
+
             await _dictRepo.SaveAsync();
             return Result.Ok();
         }

@@ -13,7 +13,7 @@ namespace ArnoAdminCore.SystemManage.Models.Poco
         public String Leader { get; set; }
         public String Phone { get; set; }
         public String Email { get; set; }
-        public int Status { get; set; }
+        public String Status { get; set; }
         //public List<User> Users { get; set; }
     }
 }
