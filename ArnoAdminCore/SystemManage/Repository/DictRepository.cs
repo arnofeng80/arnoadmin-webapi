@@ -12,9 +12,9 @@ namespace ArnoAdminCore.SystemManage.Repository
 {
     public class DictRepository : BaseRepository<Dict>
     {
-        public DictRepository(SystemDbContext context)
+        public DictRepository(SystemDbContext context) : base(context)
         {
-            this._context = context ?? throw new ArgumentNullException(nameof(context));
+            //this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public async Task<IEnumerable<Dict>> FindByCodeAsync(String dictCode)

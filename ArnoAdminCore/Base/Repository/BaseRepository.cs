@@ -1,4 +1,5 @@
 ﻿using ArnoAdminCore.Base.Models;
+using ArnoAdminCore.SystemManage.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,20 +13,25 @@ namespace ArnoAdminCore.Base.Repository
     public class BaseRepository<TEntity> where TEntity : BaseEntity
     {
         protected DbContext _context;
+
+        public BaseRepository(DbContext context)
+        {
+            this._context = context ?? throw new ArgumentNullException(nameof(context));
+        }
         public async Task<IEnumerable<TEntity>> FindAllAsync()
         {
             return await _context.Set<TEntity>().Where(x => x.Deleted == 0).OrderByDescending(x => x.Id).ToListAsync();
         }
-        public async Task<PageList<TEntity>> FindAllAsync(PageParams pageParams)
+        public async Task<PageList<TEntity>> FindAllAsync(BasePageSearch pageSearcg)
         {
-            if (pageParams == null)
+            if (pageSearcg == null)
             {
-                throw new ArgumentNullException(nameof(pageParams));
+                throw new ArgumentNullException(nameof(pageSearcg));
             }
             var query = _context.Set<TEntity>().AsQueryable();
 
-            int pageNum = pageParams.PageNum < 1 ? 1 : pageParams.PageNum;
-            int pageSize = pageParams.PageSize;
+            int pageNum = pageSearcg.PageNum < 1 ? 1 : pageSearcg.PageNum;
+            int pageSize = pageSearcg.PageSize;
 
             query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
 

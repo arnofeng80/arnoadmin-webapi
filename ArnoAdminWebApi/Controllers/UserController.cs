@@ -31,7 +31,7 @@ namespace ArnoAdminWebApi.Controllers
             return Result.Ok(list);
         }
 
-        [HttpGet("{id}", Name =nameof(GetUser))]
+        [HttpGet("{id}")]
         public async Task<Result> GetUser(long id)
         {
             var user = await _userRepo.FindByIdAsync(id);

@@ -9,9 +9,9 @@ namespace ArnoAdminCore.SystemManage.Repository
 {
     public class UserRepository : BaseRepository<User>
     {
-        public UserRepository(SystemDbContext context)
+        public UserRepository(SystemDbContext context) : base(context)
         {
-            this._context = context ?? throw new ArgumentNullException(nameof(context));
+            //this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
     }
 }

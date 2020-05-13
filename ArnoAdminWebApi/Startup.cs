@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ArnoAdminCore.Base;
 using ArnoAdminCore.SystemManage.Context;
 using ArnoAdminCore.SystemManage.Repository;
-using ArnoAdminCore.SystemManage.Repository.Impl;
 using ArnoAdminCore.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -38,11 +37,11 @@ namespace ArnoAdminWebApi
                 options.SerializerSettings.Converters.Add(new LongJsonConverter());
                 //設置時間格式
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-                //忽略迴圈引用
+                //忽略?圈引用
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                //數據格式首字母小寫
+                //數據格式首字母小?
                 //options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                //數據格式按原樣輸出
+                //數據格式按原樣?出
                 //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 //忽略空值
                 //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -51,6 +50,7 @@ namespace ArnoAdminWebApi
             services.AddScoped<DepartmentRepository>();
             services.AddScoped<UserRepository>();
             services.AddScoped<DictRepository>();
+            services.AddScoped<SysConfigRepository>();
             services.AddDbContext<SystemDbContext>(options =>
                    options.UseSqlServer(GlobalContext.SystemConfig.DBConnectionString));
         }

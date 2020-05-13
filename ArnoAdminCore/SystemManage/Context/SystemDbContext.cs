@@ -21,12 +21,14 @@ namespace ArnoAdminCore.SystemManage.Context
         public DbSet<Department> Departments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Dict> Dicts { get; set; }
+        public DbSet<SysConfig> SysConfigs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new DepartmentConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
             modelBuilder.ApplyConfiguration(new DictConfig());
+            modelBuilder.ApplyConfiguration(new SysConfigConfig());
             base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<User>().HasOne(x => x.Department).WithMany(x => x.Users)
             //    .HasForeignKey(x => x.DeptId).OnDelete(DeleteBehavior.Restrict);

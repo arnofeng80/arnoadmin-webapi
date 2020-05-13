@@ -9,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArnoAdminCore.SystemManage.Repository.Impl
+namespace ArnoAdminCore.SystemManage.Repository
 {
     public class DepartmentRepository : BaseRepository<Department>
     {
-        public DepartmentRepository(SystemDbContext context)
+        public DepartmentRepository(SystemDbContext context) : base(context)
         {
-            this._context = context ?? throw new ArgumentNullException(nameof(context));
+            //this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
     }
 }
