@@ -11,6 +11,7 @@ namespace ArnoAdminCore.Utils
 
     public class StringJsonConverter : JsonConverter
     {
+
         public StringJsonConverter() { }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
