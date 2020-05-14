@@ -39,9 +39,9 @@ namespace ArnoAdminWebApi
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 //忽略?圈引用
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                //數據格式首字母小?
+                //數據格式首字母小寫
                 //options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                //數據格式按原樣?出
+                //數據格式按原樣輸出
                 //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 //忽略空值
                 //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;

@@ -1,6 +1,7 @@
 ﻿using ArnoAdminCore.Base.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ArnoAdminCore.SystemManage.Models.Poco
@@ -20,5 +21,6 @@ namespace ArnoAdminCore.SystemManage.Models.Poco
         public String Perms { get; set; }
         public String Icon { get; set; }
         public String Remark { get; set; }
+        public virtual ICollection<RoleMenu> RoleMenus { get; set; } = new List<RoleMenu>();
     }
 }

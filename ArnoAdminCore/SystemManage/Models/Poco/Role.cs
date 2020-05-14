@@ -6,7 +6,6 @@ using System.Text;
 
 namespace ArnoAdminCore.SystemManage.Models.Poco
 {
-    [Table("SysRole")]
     public class Role : BaseEntity
     {
         public String RoleName { get; set; }
@@ -15,5 +14,6 @@ namespace ArnoAdminCore.SystemManage.Models.Poco
         public String DataScope { get; set; }
         public String Status { get; set; }
         public String Remark { get; set; }
+        public virtual ICollection<RoleMenu> RoleMenus { get; set; } = new List<RoleMenu>();
     }
 }

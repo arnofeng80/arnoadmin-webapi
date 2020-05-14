@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace ArnoAdminCore.Context
 {
@@ -18,22 +19,10 @@ namespace ArnoAdminCore.Context
 
         }
 
-        public DbSet<Department> Departments { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Dict> Dicts { get; set; }
-        public DbSet<SysConfig> SysConfigs { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new DepartmentConfig());
-            modelBuilder.ApplyConfiguration(new UserConfig());
-            modelBuilder.ApplyConfiguration(new DictConfig());
-            modelBuilder.ApplyConfiguration(new SysConfigConfig());
-            modelBuilder.ApplyConfiguration(new MenuConfig());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<User>().HasOne(x => x.Department).WithMany(x => x.Users)
-            //    .HasForeignKey(x => x.DeptId).OnDelete(DeleteBehavior.Restrict);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

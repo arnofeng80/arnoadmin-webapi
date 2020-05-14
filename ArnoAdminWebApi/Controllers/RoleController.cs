@@ -59,6 +59,10 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPut]
         public async Task<Result> Update(Role entity)
         {
+            foreach(RoleMenu rm in entity.RoleMenus)
+            {
+                rm.Role = entity;
+            }
             _roleRepo.Update(entity);
             await _roleRepo.SaveAsync();
             return Result.Ok();

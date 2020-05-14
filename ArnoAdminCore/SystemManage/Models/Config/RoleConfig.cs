@@ -7,11 +7,11 @@ using System.Text;
 
 namespace ArnoAdminCore.SystemManage.Models.Config
 {
-    public class MenuConfig : IEntityTypeConfiguration<Menu>
+    public class RoleConfig : IEntityTypeConfiguration<Role>
     {
-        public void Configure(EntityTypeBuilder<Menu> builder)
+        public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.ToTable("SysMenu").HasKey(x => x.Id);
+            builder.ToTable("SysRole").HasKey(x => x.Id);
         }
     }
 }
