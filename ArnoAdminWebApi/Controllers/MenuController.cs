@@ -37,7 +37,7 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Result> GetDepartment(long id)
+        public async Task<Result> GetMenu(long id)
         {
             var menu = await _menuRepo.FindByIdAsync(id);
 

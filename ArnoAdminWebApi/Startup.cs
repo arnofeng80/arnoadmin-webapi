@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ArnoAdminCore.Base;
-using ArnoAdminCore.SystemManage.Context;
+using ArnoAdminCore.Context;
 using ArnoAdminCore.SystemManage.Repository;
 using ArnoAdminCore.Utils;
 using AutoMapper;
@@ -49,6 +49,7 @@ namespace ArnoAdminWebApi
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<DepartmentRepository>();
             services.AddScoped<UserRepository>();
+            services.AddScoped<RoleRepository>();
             services.AddScoped<DictRepository>();
             services.AddScoped<SysConfigRepository>();
             services.AddScoped<MenuRepository>();

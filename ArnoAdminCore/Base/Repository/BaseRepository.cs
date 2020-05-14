@@ -1,5 +1,5 @@
 ﻿using ArnoAdminCore.Base.Models;
-using ArnoAdminCore.SystemManage.Context;
+using ArnoAdminCore.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ArnoAdminCore.SystemManage.Context
+namespace ArnoAdminCore.Context
 {
     public class SystemDbContext : DbContext
     {
@@ -20,6 +20,7 @@ namespace ArnoAdminCore.SystemManage.Context
 
         public DbSet<Department> Departments { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<Dict> Dicts { get; set; }
         public DbSet<SysConfig> SysConfigs { get; set; }
 

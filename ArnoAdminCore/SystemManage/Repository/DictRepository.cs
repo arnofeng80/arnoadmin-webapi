@@ -1,5 +1,5 @@
 ﻿using ArnoAdminCore.Base.Repository;
-using ArnoAdminCore.SystemManage.Context;
+using ArnoAdminCore.Context;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.Base.Constants;
 using Microsoft.EntityFrameworkCore;
