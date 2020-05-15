@@ -43,21 +43,23 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPost]
-        public Result Add([FromBody]User entity)
+        public async Task<Result> Add(User entity)
         {
             _userRepo.Add(entity);
+            await _userRepo.SaveAsync();
             return Result.Ok();
         }
 
         [HttpPut]
-        public Result Update([FromBody]User entity)
+        public async Task<Result> Update(User entity)
         {
             _userRepo.Update(entity);
+            await _userRepo.SaveAsync();
             return Result.Ok();
         }
 
         [HttpDelete]
-        public Result Delete([FromBody]User entity)
+        public Result Delete(User entity)
         {
             _userRepo.Add(entity);
             return Result.Ok();

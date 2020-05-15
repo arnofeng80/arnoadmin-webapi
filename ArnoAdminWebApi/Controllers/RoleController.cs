@@ -29,10 +29,16 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<Result> list([FromQuery]RoleSearch search)
+        public async Task<Result> PageList([FromQuery]RoleSearch search)
         {
             PageList<Role> list = await _roleRepo.FindAllAsync(search);
             return Result.Ok(list);
+        }
+
+        [HttpGet("all")]
+        public async Task<Result> All()
+        {
+            return Result.Ok(await _roleRepo.FindAllAsync());
         }
 
         [HttpGet("{id}")]
@@ -59,12 +65,17 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPut]
         public async Task<Result> Update(Role entity)
         {
-            foreach(RoleMenu rm in entity.RoleMenus)
+            using(var tran = _roleRepo.DbContext.Database.BeginTransaction())
             {
-                rm.Role = entity;
+                foreach (RoleMenu rm in entity.RoleMenus)
+                {
+                    rm.Role = entity;
+                }
+                _roleRepo.Update(entity);
+                await _roleRepo.SaveAsync();
+                tran.Commit();
             }
-            _roleRepo.Update(entity);
-            await _roleRepo.SaveAsync();
+            
             return Result.Ok();
         }
 
@@ -74,6 +85,12 @@ namespace ArnoAdminWebApi.Controllers
             _roleRepo.Delete(id);
             await _roleRepo.SaveAsync();
             return Result.Ok();
+        }
+
+        [HttpGet("menu/{roleId}")]
+        public async Task<Result> FindMenuByRoleId(long roleId)
+        {
+            return Result.Ok(await _roleRepo.FindMenusByRoleIdAsync(roleId));;
         }
     }
 }

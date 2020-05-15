@@ -13,6 +13,7 @@ namespace ArnoAdminCore.Base.Repository
     public class BaseRepository<TEntity> where TEntity : BaseEntity
     {
         protected DbContext _context;
+        public DbContext DbContext { get => this._context; }
 
         public BaseRepository(DbContext context)
         {
@@ -52,7 +53,7 @@ namespace ArnoAdminCore.Base.Repository
         {
             return await _context.Set<TEntity>().OrderByDescending(x => x.Id).ToListAsync();
         }
-        public TEntity Add(TEntity entity)
+        public virtual TEntity Add(TEntity entity)
         {
             if (entity == null)
             {
@@ -62,7 +63,7 @@ namespace ArnoAdminCore.Base.Repository
             _context.Set<TEntity>().Add(entity);
             return entity;
         }
-        public TEntity Update(TEntity entity)
+        public virtual TEntity Update(TEntity entity)
         {
             if (entity == null)
             {

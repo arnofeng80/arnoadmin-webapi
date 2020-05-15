@@ -1,6 +1,7 @@
 ﻿using ArnoAdminCore.Base.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ArnoAdminCore.SystemManage.Models.Poco
@@ -18,9 +19,10 @@ namespace ArnoAdminCore.SystemManage.Models.Poco
         public String Gender { get; set; }
         public String Password { get; set; }
         public int Status { get; set; }
+        [NotMapped]
+        public long[] RoleIds { get; set; }
         public String LoginIp { get; set; }
-        public DateTime LoginDate { get; set; }
+        public DateTime? LoginDate { get; set; }
         public String Remark { get; set; }
-        //public Department Department { get; set; }
     }
 }

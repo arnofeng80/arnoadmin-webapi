@@ -11,7 +11,7 @@ namespace ArnoAdminCore.SystemManage.Models.Config
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("SysUser");
+            builder.ToTable("SysUser").HasKey(x => x.Id);
             //builder.HasOne(x => x.Department).WithMany(x => x.Users).HasForeignKey(x => x.DeptId).OnDelete(DeleteBehavior.Restrict);
         }
     }
