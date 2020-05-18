@@ -1,10 +1,14 @@
 ﻿using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.Context;
+using ArnoAdminCore.SystemManage.Models.Dto.Search;
+using ArnoAdminCore.Utils;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,16 +36,16 @@ namespace ArnoAdminCore.Base.Repositories
         {
             return await _context.Set<TEntity>().Where(x => x.Deleted == 0).OrderByDescending(x => x.Id).ToListAsync();
         }
-        public PageList<TEntity> FindAll(BasePageSearch pageSearcg)
+        public PageList<TEntity> FindAll(BasePageSearch pageSearch)
         {
-            if (pageSearcg == null)
+            if (pageSearch == null)
             {
-                throw new ArgumentNullException(nameof(pageSearcg));
+                throw new ArgumentNullException(nameof(pageSearch));
             }
             var query = _context.Set<TEntity>().AsQueryable();
 
-            int pageNum = pageSearcg.PageNum < 1 ? 1 : pageSearcg.PageNum;
-            int pageSize = pageSearcg.PageSize;
+            int pageNum = pageSearch.PageNum < 1 ? 1 : pageSearch.PageNum;
+            int pageSize = pageSearch.PageSize;
 
             query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
@@ -50,16 +54,18 @@ namespace ArnoAdminCore.Base.Repositories
 
             return new PageList<TEntity>(list, totalCount);
         }
-        public async Task<PageList<TEntity>> FindAllAsync(BasePageSearch pageSearcg)
+        public async Task<PageList<TEntity>> FindAllAsync(BasePageSearch pageSearch)
         {
-            if (pageSearcg == null)
+            if (pageSearch == null)
             {
-                throw new ArgumentNullException(nameof(pageSearcg));
+                throw new ArgumentNullException(nameof(pageSearch));
             }
-            var query = _context.Set<TEntity>().AsQueryable();
+            var exp = ExpressionHelper<TEntity>.CreateExpression(pageSearch);
 
-            int pageNum = pageSearcg.PageNum < 1 ? 1 : pageSearcg.PageNum;
-            int pageSize = pageSearcg.PageSize;
+            var query = exp == null ? _context.Set<TEntity>().AsQueryable() : _context.Set<TEntity>().Where(exp);
+
+            int pageNum = pageSearch.PageNum < 1 ? 1 : pageSearch.PageNum;
+            int pageSize = pageSearch.PageSize;
 
             query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
