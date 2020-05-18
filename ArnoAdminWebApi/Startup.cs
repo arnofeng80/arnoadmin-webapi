@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArnoAdminCore.Base;
 using ArnoAdminCore.Context;
-using ArnoAdminCore.SystemManage.Repository;
+using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;

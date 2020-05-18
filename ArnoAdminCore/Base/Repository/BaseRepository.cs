@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArnoAdminCore.Base.Repository
+namespace ArnoAdminCore.Base.Repositories
 {
     public class BaseRepository<TEntity> where TEntity : BaseEntity
     {

@@ -1,4 +1,4 @@
-﻿using ArnoAdminCore.Base.Repository;
+﻿using ArnoAdminCore.Base.Repositories;
 using ArnoAdminCore.Context;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.Utils;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArnoAdminCore.SystemManage.Repository
+namespace ArnoAdminCore.SystemManage.Repositories
 {
     public class DepartmentRepository : BaseRepository<Department>
     {

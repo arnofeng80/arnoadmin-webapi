@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
-using ArnoAdminCore.SystemManage.Repository;
+using ArnoAdminCore.SystemManage.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -91,6 +91,17 @@ namespace ArnoAdminWebApi.Controllers
         public async Task<Result> FindMenuByRoleId(long roleId)
         {
             return Result.Ok(await _roleRepo.FindMenusByRoleIdAsync(roleId));;
+        }
+
+        [HttpPut("changeStatus")]
+        public async Task<Result> ChangeStatus(Role entity)
+        {
+            Role role = await _roleRepo.FindByIdAsync(entity.Id);
+            role.Status = entity.Status;
+            _roleRepo.Update(role);
+            await _roleRepo.SaveAsync();
+
+            return Result.Ok();
         }
     }
 }

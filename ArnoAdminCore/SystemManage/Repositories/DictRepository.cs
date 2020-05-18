@@ -1,4 +1,4 @@
-﻿using ArnoAdminCore.Base.Repository;
+﻿using ArnoAdminCore.Base.Repositories;
 using ArnoAdminCore.Context;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.Base.Constants;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ArnoAdminCore.SystemManage.Repository
+namespace ArnoAdminCore.SystemManage.Repositories
 {
     public class DictRepository : BaseRepository<Dict>
     {

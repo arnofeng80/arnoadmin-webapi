@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.List;
 using ArnoAdminCore.SystemManage.Models.Poco;
-using ArnoAdminCore.SystemManage.Repository;
+using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
