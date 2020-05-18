@@ -14,6 +14,6 @@ namespace ArnoAdminCore.SystemManage.Models.Poco
         public String Phone { get; set; }
         public String Email { get; set; }
         public String Status { get; set; }
-        //public List<User> Users { get; set; }
+        public virtual ICollection<RoleDept> RoleDepts { get; set; } = new List<RoleDept>();
     }
 }

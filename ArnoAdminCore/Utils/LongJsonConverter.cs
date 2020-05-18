@@ -9,8 +9,7 @@ namespace ArnoAdminCore.Utils
     {
         public override long ReadJson(JsonReader reader, Type objectType, long existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            long val = 0L;
-            long.TryParse(reader.Value.ToString(), out val);
+            long.TryParse(reader.Value.ToString(), out long val);
             return val;
         }
 

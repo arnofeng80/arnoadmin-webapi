@@ -15,5 +15,6 @@ namespace ArnoAdminCore.SystemManage.Models.Poco
         public String Status { get; set; }
         public String Remark { get; set; }
         public virtual ICollection<RoleMenu> RoleMenus { get; set; } = new List<RoleMenu>();
+        public virtual ICollection<RoleDept> RoleDepts { get; set; } = new List<RoleDept>();
     }
 }

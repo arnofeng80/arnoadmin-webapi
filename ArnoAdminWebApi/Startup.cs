@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ArnoAdminCore.Base;
+using ArnoAdminCore.Base.Repositories;
 using ArnoAdminCore.Context;
 using ArnoAdminCore.SystemManage.Repositories;
+using ArnoAdminCore.SystemManage.Services;
+using ArnoAdminCore.SystemManage.Services.Impl;
 using ArnoAdminCore.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +51,7 @@ namespace ArnoAdminWebApi
             services.AddScoped<DictRepository>();
             services.AddScoped<SysConfigRepository>();
             services.AddScoped<MenuRepository>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddDbContext<SystemDbContext>(options =>
                    options.UseSqlServer(GlobalContext.SystemConfig.DBConnectionString));
         }
