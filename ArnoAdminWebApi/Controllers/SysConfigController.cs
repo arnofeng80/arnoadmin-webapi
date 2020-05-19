@@ -33,16 +33,16 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<Result> list([FromQuery]SysConfigSearch search)
+        public Result list([FromQuery]SysConfigSearch search)
         {
-            PageList<SysConfig> list = await _sysConfigRepo.FindAllAsync(search);
+            PageList<SysConfig> list = _sysConfigRepo.FindAll(search);
             return Result.Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<Result> GetSysConfig(long id)
+        public Result GetSysConfig(long id)
         {
-            var sysConfig = await _sysConfigRepo.FindByIdAsync(id);
+            var sysConfig = _sysConfigRepo.FindById(id);
 
             if (sysConfig == null)
             {
@@ -53,27 +53,26 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Result> Add(SysConfig entity)
+        public Result Add(SysConfig entity)
         {
             _sysConfigRepo.Add(entity);
-            await _sysConfigRepo.SaveAsync();
+            _sysConfigRepo.Save();
             return Result.Ok();
         }
 
         [HttpPut]
-        public async Task<Result> Update(SysConfig entity)
+        public Result Update(SysConfig entity)
         {
             _sysConfigRepo.Update(entity);
-            await _sysConfigRepo.SaveAsync();
+            _sysConfigRepo.Save();
             return Result.Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<Result> Delete(long id)
+        public Result Delete(long id)
         {
             _sysConfigRepo.Delete(id);
-
-            await _sysConfigRepo.SaveAsync();
+            _sysConfigRepo.Save();
             return Result.Ok();
         }
     }

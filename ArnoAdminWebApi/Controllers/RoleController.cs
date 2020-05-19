@@ -29,23 +29,23 @@ namespace ArnoAdminWebApi.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet("list")]
-        public async Task<Result> PageList([FromQuery]RoleSearch search)
+        [HttpPost("list")]
+        public Result PageList(RoleSearch search)
         {
-            PageList<Role> list = await _roleService.FindAllAsync(search);
+            PageList<Role> list = _roleService.FindAll(search);
             return Result.Ok(list);
         }
 
         [HttpGet("all")]
-        public async Task<Result> All()
+        public Result All()
         {
-            return Result.Ok(await _roleService.FindAllAsync());
+            return Result.Ok(_roleService.FindAll());
         }
 
         [HttpGet("{id}")]
-        public async Task<Result> GetRole(long id)
+        public Result GetRole(long id)
         {
-            var entity = await _roleService.FindByIdAsync(id);
+            var entity = _roleService.FindById(id);
 
             if (entity == null)
             {
@@ -107,12 +107,12 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPut("changeStatus")]
-        public async Task<Result> ChangeStatus(Role entity)
+        public Result ChangeStatus(Role entity)
         {
-            Role role = await _roleService.FindByIdAsync(entity.Id);
+            Role role = _roleService.FindById(entity.Id);
             role.Status = entity.Status;
             _roleService.Update(role);
-            await _roleService.SaveAsync();
+            _roleService.Save();
 
             return Result.Ok();
         }

@@ -31,17 +31,17 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<Result> list()
+        public Result list()
         {
-            var list = _mapper.Map<IEnumerable<DepartmentList>>(await _deptRepo.FindAllAsync());
+            var list = _mapper.Map<IEnumerable<DepartmentList>>(_deptRepo.FindAll());
 
             return Result.Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<Result> GetDepartment(long id)
+        public Result GetDepartment(long id)
         {
-            var dept = await _deptRepo.FindByIdAsync(id);
+            var dept = _deptRepo.FindById(id);
 
             if (dept == null)
             {
@@ -52,33 +52,33 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Result> Add(Department entity)
+        public Result Add(Department entity)
         {
             _deptRepo.Add(entity);
-            await _deptRepo.SaveAsync();
+            _deptRepo.Save();
             return Result.Ok();
         }
 
         [HttpPut]
-        public async Task<Result> Update(Department entity)
+        public Result Update(Department entity)
         {
             _deptRepo.Update(entity);
-            await _deptRepo.SaveAsync();
+            _deptRepo.Save();
             return Result.Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<Result> Delete(long id)
+        public Result Delete(long id)
         {
             _deptRepo.Delete(id);
-            await _deptRepo.SaveAsync();
+            _deptRepo.Save();
             return Result.Ok();
         }
 
         [HttpGet("DeptTree")]
-        public async Task<Result> DeptTree()
+        public Result DeptTree()
         {
-            var deptList = _mapper.Map<IEnumerable<DepartmentList>>(await _deptRepo.FindAllAsync());
+            var deptList = _mapper.Map<IEnumerable<DepartmentList>>(_deptRepo.FindAll());
             var rootList = deptList.Where(x => x.ParentId == 0);
             TreeUtil.BuildTree<DepartmentList>(deptList, rootList);
             return Result.Ok(rootList);

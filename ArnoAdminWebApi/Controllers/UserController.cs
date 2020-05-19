@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArnoAdminCore.Base.Models;
+﻿using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ArnoAdminWebApi.Controllers
 {
@@ -25,16 +19,16 @@ namespace ArnoAdminWebApi.Controllers
             _userRepo = userRepo;
         }
         [HttpGet("list")]
-        public async Task<Result> list([FromQuery]UserSearch search)
+        public Result list([FromQuery]UserSearch search)
         {
-            PageList<User> list = await _userRepo.FindAllAsync(search);
+            PageList<User> list = _userRepo.FindAll(search);
             return Result.Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<Result> GetUser(long id)
+        public Result GetUser(long id)
         {
-            var user = await _userRepo.FindByIdAsync(id);
+            var user = _userRepo.FindById(id);
             if (user == null)
             {
                 return Result.Error("Not Found");
@@ -43,18 +37,18 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Result> Add(User entity)
+        public Result Add(User entity)
         {
             _userRepo.Add(entity);
-            await _userRepo.SaveAsync();
+            _userRepo.Save();
             return Result.Ok();
         }
 
         [HttpPut]
-        public async Task<Result> Update(User entity)
+        public Result Update(User entity)
         {
             _userRepo.Update(entity);
-            await _userRepo.SaveAsync();
+            _userRepo.Save();
             return Result.Ok();
         }
 

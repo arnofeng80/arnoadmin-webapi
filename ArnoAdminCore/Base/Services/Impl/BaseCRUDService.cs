@@ -20,33 +20,21 @@ namespace ArnoAdminCore.Base.Services.Impl
         {
             return _repo.FindAll();
         }
-        public virtual Task<IEnumerable<TEntity>> FindAllAsync()
+        public virtual IEnumerable<TEntity> FindAllAsync()
         {
-            return _repo.FindAllAsync();
+            return _repo.FindAll();
         }
         public virtual PageList<TEntity> FindAll(BasePageSearch pageSearcg)
         {
             return _repo.FindAll(pageSearcg);
         }
-        public virtual Task<PageList<TEntity>> FindAllAsync(BasePageSearch pageSearcg)
-        {
-            return _repo.FindAllAsync(pageSearcg);
-        }
         public virtual TEntity FindById(long id)
         {
             return _repo.FindById(id);
         }
-        public virtual Task<TEntity> FindByIdAsync(long id)
-        {
-            return _repo.FindByIdAsync(id);
-        }
         public virtual IEnumerable<TEntity> FindByIds(IEnumerable<long> ids)
         {
             return _repo.FindByIds(ids);
-        }
-        public virtual Task<IEnumerable<TEntity>> FindByIdsAsync(IEnumerable<long> ids)
-        {
-            return _repo.FindByIdsAsync(ids);
         }
         public virtual TEntity Add(TEntity entity)
         {
@@ -74,25 +62,13 @@ namespace ArnoAdminCore.Base.Services.Impl
         {
             return _repo.Exists(entity);
         }
-        public virtual Task<bool> ExistsAsync(TEntity entity)
-        {
-            return _repo.ExistsAsync(entity);
-        }
         public virtual bool Exists(long id)
         {
             return _repo.Exists(id);
         }
-        public virtual Task<bool> ExistsAsync(long id)
-        {
-            return _repo.ExistsAsync(id);
-        }
         public virtual bool Save()
         {
             return _repo.Save();
-        }
-        public virtual Task<bool> SaveAsync()
-        {
-            return _repo.SaveAsync();
         }
     }
 }

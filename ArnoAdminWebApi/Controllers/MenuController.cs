@@ -30,16 +30,16 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<Result> list()
+        public Result list()
         {
-            var list = _mapper.Map<IEnumerable<MenuList>>(await _menuRepo.FindAllAsync());
+            var list = _mapper.Map<IEnumerable<MenuList>>(_menuRepo.FindAll());
             return Result.Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<Result> GetMenu(long id)
+        public Result GetMenu(long id)
         {
-            var menu = await _menuRepo.FindByIdAsync(id);
+            var menu = _menuRepo.FindById(id);
 
             if (menu == null)
             {
@@ -50,33 +50,33 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Result> Add(Menu entity)
+        public Result Add(Menu entity)
         {
             _menuRepo.Add(entity);
-            await _menuRepo.SaveAsync();
+            _menuRepo.Save();
             return Result.Ok();
         }
 
         [HttpPut]
-        public async Task<Result> Update(Menu entity)
+        public Result Update(Menu entity)
         {
             _menuRepo.Update(entity);
-            await _menuRepo.SaveAsync();
+            _menuRepo.Save();
             return Result.Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<Result> Delete(long id)
+        public Result Delete(long id)
         {
             _menuRepo.Delete(id);
-            await _menuRepo.SaveAsync();
+            _menuRepo.Save();
             return Result.Ok();
         }
 
         [HttpGet("TreeData")]
-        public async Task<Result> TreeData()
+        public Result TreeData()
         {
-            var menuList = _mapper.Map<IEnumerable<MenuList>>(await _menuRepo.FindAllAsync());
+            var menuList = _mapper.Map<IEnumerable<MenuList>>(_menuRepo.FindAll());
             var rootList = menuList.Where(x => x.ParentId == 0);
             TreeUtil.BuildTree<MenuList>(menuList, rootList);
             return Result.Ok(rootList);

@@ -32,10 +32,6 @@ namespace ArnoAdminCore.Base.Repositories
         {
             return _context.Set<TEntity>().Where(x => x.Deleted == 0).OrderByDescending(x => x.Id).ToList();
         }
-        public async Task<IEnumerable<TEntity>> FindAllAsync()
-        {
-            return await _context.Set<TEntity>().Where(x => x.Deleted == 0).OrderByDescending(x => x.Id).ToListAsync();
-        }
         public PageList<TEntity> FindAll(BasePageSearch pageSearch)
         {
             if (pageSearch == null)
@@ -51,48 +47,24 @@ namespace ArnoAdminCore.Base.Repositories
 
             var totalCount = query.Count();
 
+            if (!String.IsNullOrWhiteSpace(pageSearch.SortColumn))
+            {
+                query = pageSearch.SortType == "descending" ? ExpressionHelper<TEntity>.OrderByDescending(query, pageSearch.SortColumn) : ExpressionHelper<TEntity>.OrderBy(query, pageSearch.SortColumn);
+            }
+
             query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
             var list = query.ToList();
 
             return new PageList<TEntity>(list, totalCount);
         }
-        public async Task<PageList<TEntity>> FindAllAsync(BasePageSearch pageSearch)
-        {
-            if (pageSearch == null)
-            {
-                throw new ArgumentNullException(nameof(pageSearch));
-            }
-            var exp = ExpressionHelper<TEntity>.CreateExpression(pageSearch);
-
-            var query = exp == null ? _context.Set<TEntity>().AsQueryable() : _context.Set<TEntity>().Where(exp);
-
-            int pageNum = pageSearch.PageNum < 1 ? 1 : pageSearch.PageNum;
-            int pageSize = pageSearch.PageSize;
-
-            var totalCount = query.Count();
-
-            query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
-
-            var list = await query.ToListAsync();
-            
-            return new PageList<TEntity>(list, totalCount);
-        }
         public TEntity FindById(long id)
         {
             return _context.Set<TEntity>().Where(x => x.Id == id && x.Deleted == 0).FirstOrDefault();
         }
-        public async Task<TEntity> FindByIdAsync(long id)
-        {
-            return await _context.Set<TEntity>().Where(x => x.Id == id && x.Deleted == 0).FirstOrDefaultAsync();
-        }
         public IEnumerable<TEntity> FindByIds(IEnumerable<long> ids)
         {
             return _context.Set<TEntity>().OrderByDescending(x => x.Id).ToList();
-        }
-        public async Task<IEnumerable<TEntity>> FindByIdsAsync(IEnumerable<long> ids)
-        {
-            return await _context.Set<TEntity>().OrderByDescending(x => x.Id).ToListAsync();
         }
         public TEntity Add(TEntity entity)
         {
@@ -136,14 +108,6 @@ namespace ArnoAdminCore.Base.Repositories
             }
             return Exists(entity.Id);
         }
-        public async Task<bool> ExistsAsync(TEntity entity)
-        {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-            return await ExistsAsync(entity.Id);
-        }
         public bool Exists(long id)
         {
             if (id == 0)
@@ -153,22 +117,9 @@ namespace ArnoAdminCore.Base.Repositories
 
             return _context.Set<TEntity>().Any(x => x.Id == id);
         }
-        public async Task<bool> ExistsAsync(long id)
-        {
-            if (id == 0)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            return await _context.Set<TEntity>().AnyAsync(x => x.Id == id);
-        }
         public bool Save()
         {
             return _context.SaveChanges() >= 0;
-        }
-        public async Task<bool> SaveAsync()
-        {
-            return await _context.SaveChangesAsync() >= 0;
         }
     }
 }

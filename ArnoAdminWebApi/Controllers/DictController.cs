@@ -35,16 +35,16 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<Result> list([FromQuery]DictSearch search)
+        public Result list([FromQuery]DictSearch search)
         {
-            PageList<Dict> list = await _dictRepo.FindAllAsync(search);
+            PageList<Dict> list = _dictRepo.FindAll(search);
             return Result.Ok(list);
         }
 
         [HttpGet("{id}")]
-        public async Task<Result> GetDict(long id)
+        public Result GetDict(long id)
         {
-            var dict = await _dictRepo.FindByIdAsync(id);
+            var dict = _dictRepo.FindById(id);
 
             if (dict == null)
             {
@@ -55,35 +55,27 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<Result> Add(Dict entity)
+        public Result Add(Dict entity)
         {
             _dictRepo.Add(entity);
-            await _dictRepo.SaveAsync();
+            _dictRepo.Save();
             return Result.Ok();
         }
 
         [HttpPut]
-        public async Task<Result> Update(Dict entity)
+        public Result Update(Dict entity)
         {
             _dictRepo.Update(entity);
-            await _dictRepo.SaveAsync();
+            _dictRepo.Save();
             return Result.Ok();
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<Result> Delete(long id)
-        //{
-        //    _dictRepo.Delete(id);
-        //    await _dictRepo.SaveAsync();
-        //    return Result.Ok();
-        //}
-
         [HttpDelete("{id}")]
-        public async Task<Result> Delete(long id)
+        public Result Delete(long id)
         {
             _dictRepo.Delete(id);
 
-            await _dictRepo.SaveAsync();
+            _dictRepo.Save();
             return Result.Ok();
         }
     }
