@@ -21,7 +21,7 @@ namespace ArnoAdminCore.Utils
                 {
                     ConstantExpression constantVal = Expression.Constant(val);
                     MemberExpression memberExp = Expression.PropertyOrField(parameter, prop.Name);
-                    Expression exp = Expression.Call(memberExp, typeof(string).GetMethod("Contains"), constantVal);
+                    Expression exp = Expression.Call(memberExp, typeof(string).GetMethod("Contains", new[] { typeof(string) }), constantVal);
                     query = query == null ? exp : Expression.And(query, exp);
                 }
             }

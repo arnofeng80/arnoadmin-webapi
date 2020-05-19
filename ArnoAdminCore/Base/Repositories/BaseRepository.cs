@@ -42,15 +42,18 @@ namespace ArnoAdminCore.Base.Repositories
             {
                 throw new ArgumentNullException(nameof(pageSearch));
             }
-            var query = _context.Set<TEntity>().AsQueryable();
+            var exp = ExpressionHelper<TEntity>.CreateExpression(pageSearch);
+
+            var query = exp == null ? _context.Set<TEntity>().AsQueryable() : _context.Set<TEntity>().Where(exp);
 
             int pageNum = pageSearch.PageNum < 1 ? 1 : pageSearch.PageNum;
             int pageSize = pageSearch.PageSize;
 
+            var totalCount = query.Count();
+
             query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
             var list = query.ToList();
-            var totalCount = query.Count();
 
             return new PageList<TEntity>(list, totalCount);
         }
@@ -67,11 +70,12 @@ namespace ArnoAdminCore.Base.Repositories
             int pageNum = pageSearch.PageNum < 1 ? 1 : pageSearch.PageNum;
             int pageSize = pageSearch.PageSize;
 
+            var totalCount = query.Count();
+
             query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
-            var list = query.ToList();
-            var totalCount = await query.CountAsync();
-
+            var list = await query.ToListAsync();
+            
             return new PageList<TEntity>(list, totalCount);
         }
         public TEntity FindById(long id)
