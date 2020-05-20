@@ -112,7 +112,6 @@ namespace ArnoAdminWebApi.Controllers
             Role role = _roleService.FindById(entity.Id);
             role.Status = entity.Status;
             _roleService.Update(role);
-            _roleService.Save();
 
             return Result.Ok();
         }

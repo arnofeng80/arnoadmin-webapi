@@ -2,6 +2,7 @@
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Repositories;
+using ArnoAdminCore.SystemManage.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,24 +12,30 @@ namespace ArnoAdminWebApi.Controllers
     [ApiController]
     public class UserController : Controller
     {
-        private readonly UserRepository _userRepo;
+        private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
-        public UserController(ILogger<UserController> logger, UserRepository userRepo)
+        public UserController(ILogger<UserController> logger, IUserService userService)
         {
             _logger = logger;
-            _userRepo = userRepo;
+            _userService = userService;
         }
-        [HttpGet("list")]
-        public Result list([FromQuery]UserSearch search)
+        [HttpPost("list")]
+        public Result PageList(UserSearch search)
         {
-            PageList<User> list = _userRepo.FindAll(search);
+            PageList<User> list = _userService.FindAll(search);
             return Result.Ok(list);
+        }
+
+        [HttpGet("all")]
+        public Result All()
+        {
+            return Result.Ok(_userService.FindAll());
         }
 
         [HttpGet("{id}")]
         public Result GetUser(long id)
         {
-            var user = _userRepo.FindById(id);
+            var user = _userService.FindById(id);
             if (user == null)
             {
                 return Result.Error("Not Found");
@@ -39,23 +46,42 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost]
         public Result Add(User entity)
         {
-            _userRepo.Add(entity);
-            _userRepo.Save();
+            _userService.Add(entity);
             return Result.Ok();
         }
 
         [HttpPut]
         public Result Update(User entity)
         {
-            _userRepo.Update(entity);
-            _userRepo.Save();
+            foreach (UserRole ur in entity.UserRoles)
+            {
+                ur.User = entity;
+            }
+            _userService.UpdateWithRole(entity);
             return Result.Ok();
         }
 
         [HttpDelete]
-        public Result Delete(User entity)
+        public Result Delete(long[] ids)
         {
-            _userRepo.Add(entity);
+            foreach (long id in ids)
+            {
+                _userService.Delete(id);
+            }
+            return Result.Ok();
+        }
+
+        [HttpPut("changeStatus")]
+        public Result ChangeStatus(User entity)
+        {
+            User user = _userService.FindById(entity.Id);
+            if (user == null)
+            {
+                return Result.Error("User Not Found");
+            }
+            user.Status = entity.Status;
+            _userService.Update(user);
+
             return Result.Ok();
         }
     }

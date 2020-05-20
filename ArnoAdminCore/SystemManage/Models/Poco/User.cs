@@ -18,11 +18,11 @@ namespace ArnoAdminCore.SystemManage.Models.Poco
         public String Mobile { get; set; }
         public String Gender { get; set; }
         public String Password { get; set; }
-        public int Status { get; set; }
-        [NotMapped]
-        public long[] RoleIds { get; set; }
+        public String Status { get; set; }
         public String LoginIp { get; set; }
         public DateTime? LoginDate { get; set; }
         public String Remark { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+
     }
 }

@@ -13,6 +13,10 @@ namespace ArnoAdminCore.Utils
             foreach(T item in parentList)
             {
                 item.Children = list.Where(x => x.ParentId == item.Id).ToList();
+                if (item.Children.Count > 0)
+                {
+                    BuildTree(list, item.Children);
+                }
             }
         }
     }
