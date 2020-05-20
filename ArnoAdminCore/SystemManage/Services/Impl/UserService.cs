@@ -16,6 +16,19 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
         {
 
         }
+
+        public override User Update(User entity)
+        {
+            if (String.IsNullOrWhiteSpace(entity.Password))
+            {
+                Repository.DbContext.Entry<User>(entity).Property("Password").IsModified = false;
+            } else
+            {
+                entity.Password = entity.Password.Trim();
+            }
+            return base.UpdatePartial(entity);
+        }
+
         public override void Delete(long id)
         {
             Repository.DbContext.Set<UserRole>().RemoveRange(Repository.DbContext.Set<UserRole>().Where(x => x.UserId == id));
@@ -27,14 +40,15 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
             {
                 this.Repository.DbContext.Set<UserRole>().RemoveRange(this.Repository.DbContext.Set<UserRole>().Where(x => x.UserId == entity.Id));
                 this.Repository.Save();
+                this.Repository.DbContext.Attach(entity);
+                this.Repository.DbContext.Entry<User>(entity).State = EntityState.Modified;
                 foreach (var userRole in entity.UserRoles)
                 {
                     userRole.UserId = entity.Id;
                     this.Repository.DbContext.Set<UserRole>().Add(userRole);
                 }
 
-                base.Update(entity);
-                Repository.Save();
+                Update(entity);
                 tran.Commit();
             }
             return entity;

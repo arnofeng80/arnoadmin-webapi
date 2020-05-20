@@ -10,7 +10,7 @@ namespace ArnoAdminCore.Base.Services.Impl
 {
     public class BaseCRUDService<TEntity> : IBaseCRUDService<TEntity> where TEntity: BaseEntity
     {
-        protected readonly BaseRepository<TEntity> _repo;
+        private readonly BaseRepository<TEntity> _repo;
         public BaseRepository<TEntity> Repository { get => _repo; }
         public BaseCRUDService(BaseRepository<TEntity> repo)
         {
@@ -47,6 +47,11 @@ namespace ArnoAdminCore.Base.Services.Impl
             var e = _repo.Update(entity);
             _repo.Save();
             return e;
+        }
+        public virtual TEntity UpdatePartial(TEntity entity)
+        {
+            _repo.Save();
+            return entity;
         }
         public virtual void Delete(TEntity entity)
         {

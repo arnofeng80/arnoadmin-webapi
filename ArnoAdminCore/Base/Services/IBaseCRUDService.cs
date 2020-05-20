@@ -16,6 +16,7 @@ namespace ArnoAdminCore.Base.Services
         public IEnumerable<TEntity> FindByIds(IEnumerable<long> ids);
         public TEntity Add(TEntity entity);
         public TEntity Update(TEntity entity);
+        public TEntity UpdatePartial(TEntity entity);
         public void Delete(TEntity entity);
         public void Delete(long id);
         public bool Exists(TEntity entity);

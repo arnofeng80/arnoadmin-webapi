@@ -11,5 +11,7 @@ namespace ArnoAdminCore.SystemManage.Models.Dto.Search
         public String NameChn { get; set; }
         public String NameEng { get; set; }
         public String Status { get; set; }
+        public long? DeptId { get; set; }
+        public DateRange CreateTime { get; set; }
     }
 }

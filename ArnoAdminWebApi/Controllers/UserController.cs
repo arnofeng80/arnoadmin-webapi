@@ -5,6 +5,7 @@ using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.SystemManage.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace ArnoAdminWebApi.Controllers
 {
@@ -80,9 +81,29 @@ namespace ArnoAdminWebApi.Controllers
                 return Result.Error("User Not Found");
             }
             user.Status = entity.Status;
-            _userService.Update(user);
+            _userService.UpdatePartial(user);
 
             return Result.Ok();
+        }
+
+        [HttpPut("resetPwd")]
+        public Result ResetPwd(User entity)
+        {
+            User user = _userService.FindById(entity.Id);
+            if (user == null)
+            {
+                return Result.Error("User Not Found");
+            }
+            user.Password = entity.Password;
+            _userService.UpdatePartial(user);
+
+            return Result.Ok();
+        }
+
+        [HttpGet("dept/{userId}")]
+        public async Task<Result> FindRoleByUserId(long userId)
+        {
+            return Result.Ok(await _userService.FindRoleByUserIdAsync(userId));
         }
     }
 }

@@ -65,10 +65,10 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
         }
         public async Task<IEnumerable<RoleMenu>> FindMenusByRoleIdAsync(long id)
         {
-            var list = from rm in _repo.DbContext.Set<RoleMenu>()
+            var list = from rm in Repository.DbContext.Set<RoleMenu>()
                        where rm.RoleId == id && !(
-                            from srm in _repo.DbContext.Set<RoleMenu>()
-                            join sm in _repo.DbContext.Set<Menu>() on srm.MenuId equals sm.Id
+                            from srm in Repository.DbContext.Set<RoleMenu>()
+                            join sm in Repository.DbContext.Set<Menu>() on srm.MenuId equals sm.Id
                             where srm.RoleId == id
                             select sm.ParentId
                        ).Contains(rm.MenuId)
@@ -78,10 +78,10 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
 
         public async Task<IEnumerable<RoleDept>> FindDeptByRoleIdAsync(long id)
         {
-            var list = from rd in _repo.DbContext.Set<RoleDept>()
+            var list = from rd in Repository.DbContext.Set<RoleDept>()
                        where rd.RoleId == id && !(
-                            from srd in _repo.DbContext.Set<RoleDept>()
-                            join sd in _repo.DbContext.Set<Department>() on srd.DeptId equals sd.Id
+                            from srd in Repository.DbContext.Set<RoleDept>()
+                            join sd in Repository.DbContext.Set<Department>() on srd.DeptId equals sd.Id
                             where srd.RoleId == id
                             select sd.ParentId
                        ).Contains(rd.DeptId)
