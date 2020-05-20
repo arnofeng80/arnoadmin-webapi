@@ -16,7 +16,6 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
         {
 
         }
-
         public override User Update(User entity)
         {
             if (String.IsNullOrWhiteSpace(entity.Password))
@@ -28,7 +27,6 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
             }
             return base.UpdatePartial(entity);
         }
-
         public override void Delete(long id)
         {
             Repository.DbContext.Set<UserRole>().RemoveRange(Repository.DbContext.Set<UserRole>().Where(x => x.UserId == id));

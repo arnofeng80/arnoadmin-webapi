@@ -75,7 +75,6 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
                        select rm;
             return await list.ToListAsync();
         }
-
         public async Task<IEnumerable<RoleDept>> FindDeptByRoleIdAsync(long id)
         {
             var list = from rd in Repository.DbContext.Set<RoleDept>()
