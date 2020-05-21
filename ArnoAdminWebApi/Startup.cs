@@ -24,10 +24,11 @@ namespace ArnoAdminWebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-            GlobalContext.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
+            
+            GlobalContext.HostingEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -55,6 +56,8 @@ namespace ArnoAdminWebApi
             services.AddScoped<IUserService, UserService>();
             services.AddDbContext<SystemDbContext>(options =>
                    options.UseSqlServer(GlobalContext.SystemConfig.DBConnectionString));
+
+            GlobalContext.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

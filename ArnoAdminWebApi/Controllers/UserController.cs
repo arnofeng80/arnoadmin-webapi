@@ -3,8 +3,12 @@ using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.SystemManage.Services;
+using ArnoAdminCore.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ArnoAdminWebApi.Controllers
@@ -104,6 +108,29 @@ namespace ArnoAdminWebApi.Controllers
         public async Task<Result> FindRoleByUserId(long userId)
         {
             return Result.Ok(await _userService.FindRoleByUserIdAsync(userId));
+        }
+
+        [HttpPost("importData")]
+        public Result importData(IFormCollection fileList)
+        {
+            List<User> list = null;
+            if (fileList.Files.Count > 0)
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    fileList.Files[0].CopyTo(ms);
+                    ms.Flush();
+                    ms.Position = 0;
+                    ExcelHelper<User> excel = new ExcelHelper<User>();
+                    list = excel.ImportFromExcel(ms);
+                }
+            }
+            return Result.Ok();
+        }
+
+        public Result exportData()
+        {
+            return Result.Ok();
         }
     }
 }
