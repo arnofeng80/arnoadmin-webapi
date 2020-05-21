@@ -38,6 +38,12 @@ namespace ArnoAdminWebApi.Controllers
             return Result.Ok(list);
         }
 
+        [HttpGet("all")]
+        public Result All()
+        {
+            return Result.Ok(_mapper.Map<IEnumerable<DepartmentList>>(_deptRepo.FindAll()));
+        }
+
         [HttpGet("{id}")]
         public Result GetDepartment(long id)
         {
