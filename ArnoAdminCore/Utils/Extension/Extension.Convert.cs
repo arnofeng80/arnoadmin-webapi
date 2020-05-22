@@ -10,117 +10,98 @@ namespace ArnoAdminCore.Utils.Extension
     public static partial class Extensions
     {
         #region 转换为long
-        /// <summary>
-        /// 将object转换为long，若转换失败，则返回0。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
+        public static long ParseToLong(this object obj, long defaultValue)
+        {
+            if (obj == null) return defaultValue;
+            try
+            {
+                long.TryParse(obj.ToString(), out defaultValue);
+            }
+            catch { }
+            return defaultValue;
+        }
         public static long ParseToLong(this object obj)
         {
-            try
-            {
-                return long.Parse(obj.ToString());
-            }
-            catch
-            {
-                return 0L;
-            }
+            return ParseToLong(obj, default);
         }
 
-        /// <summary>
-        /// 将object转换为long，若转换失败，则返回指定值。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        public static long ParseToLong(this string str, long defaultValue)
+        public static long ParseToLong(this String str, long defaultValue)
         {
+            if (String.IsNullOrWhiteSpace(str)) return defaultValue;
             try
             {
-                return long.Parse(str);
+                long.TryParse(str, out defaultValue);
             }
-            catch
-            {
-                return defaultValue;
-            }
+            catch { }
+            return defaultValue;
+        }
+        public static long ParseToLong(this String str)
+        {
+            return ParseToLong(str, default);
         }
         #endregion
 
-        #region 转换为int
-        /// <summary>
-        /// 将object转换为int，若转换失败，则返回0。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static int ParseToInt(this object str)
+        #region 转换为Int
+        public static int ParseToInt(this object obj, int defaultValue)
         {
+            if (obj == null) return defaultValue;
             try
             {
-                return Convert.ToInt32(str);
+                int.TryParse(obj.ToString(), out defaultValue);
             }
-            catch
-            {
-                return 0;
-            }
+            catch { }
+            return defaultValue;
+        }
+        public static int ParseToInt(this object obj)
+        {
+            return ParseToInt(obj, default);
         }
 
-        /// <summary>
-        /// 将object转换为int，若转换失败，则返回指定值。不抛出异常。 
-        /// null返回默认值
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        public static int ParseToInt(this object str, int defaultValue)
+        public static int ParseToInt(this String str, int defaultValue)
         {
-            if (str == null)
-            {
-                return defaultValue;
-            }
+            if (String.IsNullOrWhiteSpace(str)) return defaultValue;
             try
             {
-                return Convert.ToInt32(str);
+                int.TryParse(str, out defaultValue);
             }
-            catch
-            {
-                return defaultValue;
-            }
+            catch { }
+            return defaultValue;
+        }
+        public static int ParseToInt(this String str)
+        {
+            return ParseToInt(str, default);
         }
         #endregion
 
-        #region 转换为short
-        /// <summary>
-        /// 将object转换为short，若转换失败，则返回0。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
+        #region 转换为Short
+        public static short ParseToShort(this object obj, short defaultValue)
+        {
+            if (obj == null) return defaultValue;
+            try
+            {
+                short.TryParse(Convert.ToString(obj), out defaultValue);
+            }
+            catch { }
+            return defaultValue;
+        }
         public static short ParseToShort(this object obj)
         {
-            try
-            {
-                return short.Parse(obj.ToString());
-            }
-            catch
-            {
-                return 0;
-            }
+            return ParseToShort(obj, default);
         }
 
-        /// <summary>
-        /// 将object转换为short，若转换失败，则返回指定值。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static short ParseToShort(this object str, short defaultValue)
+        public static short ParseToShort(this String str, short defaultValue)
         {
+            if (String.IsNullOrWhiteSpace(str)) return defaultValue;
             try
             {
-                return short.Parse(str.ToString());
+                short.TryParse(Convert.ToString(str), out defaultValue);
             }
-            catch
-            {
-                return defaultValue;
-            }
+            catch { }
+            return defaultValue;
+        }
+        public static short ParseToShort(this String str)
+        {
+            return ParseToShort(str, default);
         }
         #endregion
 
