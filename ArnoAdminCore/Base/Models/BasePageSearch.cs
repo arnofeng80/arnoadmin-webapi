@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArnoAdminCore.Base.Models
 {
-    public class PageParams
+    public class BasePageSearch : BaseSearch
     {
         /// <summary>
         /// 每页行数
@@ -14,13 +14,5 @@ namespace ArnoAdminCore.Base.Models
         /// 当前页
         /// </summary>
         public int PageNum { get; set; } = 1;
-        /// <summary>
-        /// 排序列
-        /// </summary>
-        public string SortColumn { get; set; }
-        /// <summary>
-        /// 排序类型
-        /// </summary>
-        public string SortType { get; set; }
     }
 }

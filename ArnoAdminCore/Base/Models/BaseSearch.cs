@@ -4,7 +4,15 @@ using System.Text;
 
 namespace ArnoAdminCore.Base.Models
 {
-    public class BasePageSearch : PageParams
+    public class BaseSearch
     {
+        /// <summary>
+        /// 排序列
+        /// </summary>
+        public string SortColumn { get; set; }
+        /// <summary>
+        /// 排序类型
+        /// </summary>
+        public string SortType { get; set; }
     }
 }

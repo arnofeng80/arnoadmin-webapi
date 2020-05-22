@@ -24,9 +24,13 @@ namespace ArnoAdminCore.Base.Services.Impl
         {
             return _repo.FindAll();
         }
-        public virtual PageList<TEntity> FindAll(BasePageSearch pageSearcg)
+        public virtual IEnumerable<TEntity> FindAll(BaseSearch searcher)
         {
-            return _repo.FindAll(pageSearcg);
+            return _repo.FindAll(searcher);
+        }
+        public virtual PageList<TEntity> FindAll(BasePageSearch pageSearcher)
+        {
+            return _repo.FindAll(pageSearcher);
         }
         public virtual TEntity FindById(long id)
         {

@@ -32,29 +32,54 @@ namespace ArnoAdminCore.Base.Repositories
         {
             return _context.Set<TEntity>().Where(x => x.Deleted == 0).OrderByDescending(x => x.Id).ToList();
         }
-        public PageList<TEntity> FindAll(BasePageSearch pageSearch)
+        private IQueryable<TEntity> GetQueryExpression(BaseSearch searcher, out int totalCount)
         {
-            if (pageSearch == null)
+            if (searcher == null)
             {
-                throw new ArgumentNullException(nameof(pageSearch));
+                throw new ArgumentNullException(nameof(searcher));
             }
-            var exp = ExpressionHelper<TEntity>.CreateExpression(pageSearch);
+            var exp = ExpressionHelper<TEntity>.CreateExpression(searcher);
 
-            var query = exp == null ? _context.Set<TEntity>().AsQueryable() : _context.Set<TEntity>().Where(exp);
-
-            int pageNum = pageSearch.PageNum < 1 ? 1 : pageSearch.PageNum;
-            int pageSize = pageSearch.PageSize;
-
-            var totalCount = query.Count();
-
-            if (!String.IsNullOrWhiteSpace(pageSearch.SortColumn))
+            var query = _context.Set<TEntity>().Where(x => x.Deleted == 0);
+            if(exp != null)
             {
-                query = pageSearch.SortType == "descending" ? ExpressionHelper<TEntity>.OrderByDescending(query, pageSearch.SortColumn) : ExpressionHelper<TEntity>.OrderBy(query, pageSearch.SortColumn);
+                query = query.Where(exp);
             }
 
-            query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
+            var pageSearcher = searcher as BasePageSearch;
 
-            var list = query.ToList();
+            if (pageSearcher != null)
+            {
+                totalCount = query.Count();
+            }
+            else
+            {
+                totalCount = 0;
+            }
+
+            if (!String.IsNullOrWhiteSpace(searcher.SortColumn))
+            {
+                query = searcher.SortType == "descending" ? ExpressionHelper<TEntity>.OrderByDescending(query, searcher.SortColumn) : ExpressionHelper<TEntity>.OrderBy(query, searcher.SortColumn);
+            }
+
+            if (pageSearcher != null)
+            {
+                int pageNum = pageSearcher.PageNum < 1 ? 1 : pageSearcher.PageNum;
+                int pageSize = pageSearcher.PageSize;
+                query = query.Skip((pageNum - 1) * pageSize).Take(pageSize);
+            }
+
+            return query;
+        }
+        public IEnumerable<TEntity> FindAll(BaseSearch pageSearch)
+        {
+            int totalCount;
+            return GetQueryExpression(pageSearch, out totalCount).ToList();
+        }
+        public PageList<TEntity> FindAll(BasePageSearch pageSearcher)
+        {
+            int totalCount;
+            var list = GetQueryExpression(pageSearcher, out totalCount).ToList();
 
             return new PageList<TEntity>(list, totalCount);
         }

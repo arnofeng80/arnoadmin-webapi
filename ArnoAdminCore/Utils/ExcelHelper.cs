@@ -14,12 +14,33 @@ using System.Text;
 
 namespace ArnoAdminCore.Utils
 {
+    public class NPOIMemoryStream : MemoryStream
+    {
+        public bool IsColse
+        {
+            get;
+            private set;
+        }
+        public NPOIMemoryStream(bool colse = false)
+        {
+            IsColse = colse;
+        }
+        public override void Close()
+        {
+            if (IsColse)
+            {
+                base.Close();
+            }
+        }
+    }
+
     /// <summary>
     /// List匯出到Excel文件
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ExcelHelper<T> where T : new()
     {
+
         #region List匯出到Excel文件
         /// <summary>
         /// List匯出到Excel文件
@@ -56,9 +77,9 @@ namespace ArnoAdminCore.Utils
         /// <param name="list">資料來源</param>  
         /// <param name="sHeaderText">表頭文本</param>  
         /// <param name="columns">需要匯出的屬性</param>  
-        private MemoryStream CreateExportMemoryStream(List<T> list, string sHeaderText, string[] columns)
+        public MemoryStream CreateExportMemoryStream(List<T> list, string sHeaderText, string[] columns)
         {
-            HSSFWorkbook workbook = new HSSFWorkbook();
+            IWorkbook workbook = new XSSFWorkbook();
             ISheet sheet = workbook.CreateSheet();
 
             Type type = typeof(T);
@@ -198,13 +219,11 @@ namespace ArnoAdminCore.Utils
                 #endregion
             }
 
-            using (MemoryStream ms = new MemoryStream())
-            {
-                workbook.Write(ms);
-                ms.Flush();
-                ms.Position = 0;
-                return ms;
-            }
+            MemoryStream ms = new NPOIMemoryStream();
+            workbook.Write(ms);
+            ms.Flush();
+            ms.Position = 0;
+            return ms;
         }
         #endregion
 
@@ -265,12 +284,10 @@ namespace ArnoAdminCore.Utils
                                         mapPropertyInfoDict[j].SetValue(entity, row.GetCell(j).ParseToString().ParseToDateTime());
                                     }
                                     break;
-
                                 case "System.Boolean":
                                 case "System.Nullable`1[System.Boolean]":
                                     mapPropertyInfoDict[j].SetValue(entity, row.GetCell(j).ParseToString().ParseToBool());
                                     break;
-
                                 case "System.Byte":
                                 case "System.Nullable`1[System.Byte]":
                                     mapPropertyInfoDict[j].SetValue(entity, Byte.Parse(row.GetCell(j).ParseToString()));
@@ -283,22 +300,18 @@ namespace ArnoAdminCore.Utils
                                 case "System.Nullable`1[System.Int32]":
                                     mapPropertyInfoDict[j].SetValue(entity, row.GetCell(j).ParseToString().ParseToInt());
                                     break;
-
                                 case "System.Int64":
                                 case "System.Nullable`1[System.Int64]":
                                     mapPropertyInfoDict[j].SetValue(entity, row.GetCell(j).ParseToString().ParseToLong());
                                     break;
-
                                 case "System.Double":
                                 case "System.Nullable`1[System.Double]":
                                     mapPropertyInfoDict[j].SetValue(entity, row.GetCell(j).ParseToString().ParseToDouble());
                                     break;
-
                                 case "System.Decimal":
                                 case "System.Nullable`1[System.Decimal]":
                                     mapPropertyInfoDict[j].SetValue(entity, row.GetCell(j).ParseToString().ParseToDecimal());
                                     break;
-
                                 default:
                                 case "System.String":
                                     mapPropertyInfoDict[j].SetValue(entity, row.GetCell(j).ParseToString());

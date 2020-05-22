@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace ArnoAdminWebApi.Controllers
@@ -128,9 +132,36 @@ namespace ArnoAdminWebApi.Controllers
             return Result.Ok();
         }
 
-        public Result exportData()
+        [HttpPost("export")]
+        //public HttpResponseMessage exportData(UserSearch search)
+        public FileContentResult exportData(UserSearch search)
         {
-            return Result.Ok();
+            var list = _userService.FindAll();
+            ExcelHelper<User> excel = new ExcelHelper<User>();
+
+            //var response = new HttpResponseMessage(HttpStatusCode.OK);
+            //response.Content = new StreamContent(excel.CreateExportMemoryStream(list.ToList(), "", null));
+            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            //return response;
+
+            //HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            //response.Content = new StreamContent(excel.CreateExportMemoryStream(list.ToList(), "", null));
+            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.ms-excel");
+            //response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            //{
+            //    FileName = "test.xlsx"
+            //};
+            //return response;
+            var stream = excel.CreateExportMemoryStream(list.ToList(), "", null);
+            byte[] bytes = new byte[stream.Length];
+            stream.Read(bytes, 0, bytes.Length);
+
+            return new FileContentResult(bytes, "application/vnd.ms-excel");
+            
+
+            //var actionresult = new FileStreamResult(excel.CreateExportMemoryStream(list.ToList(), "", null), "application/vnd.ms-excel");
+            //actionresult.FileDownloadName = "test.xlsx";
+            //return actionresult;
         }
     }
 }
