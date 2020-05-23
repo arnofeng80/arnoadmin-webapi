@@ -20,15 +20,20 @@ namespace ArnoAdminCore.Base.Services.Impl
         {
             return _repo.FindAll();
         }
-        public virtual IEnumerable<TEntity> FindAllAsync()
+        public virtual  Task<IEnumerable<TEntity>> FindAllAsync()
         {
-            return _repo.FindAll();
+            return Task.Run(() => _repo.FindAll());
         }
         public virtual IEnumerable<TEntity> FindAll(BaseSearch searcher)
         {
             return _repo.FindAll(searcher);
         }
-        public virtual PageList<TEntity> FindAll(BasePageSearch pageSearcher)
+        public virtual Task<IEnumerable<TEntity>> FindAllAsync(BaseSearch searcher)
+        {
+            return Task.FromResult(_repo.FindAll(searcher));
+            //return Task.Run(() => _repo.FindAll(searcher));
+        }
+        public virtual PageList<TEntity> FindPage(BasePageSearch pageSearcher)
         {
             return _repo.FindAll(pageSearcher);
         }

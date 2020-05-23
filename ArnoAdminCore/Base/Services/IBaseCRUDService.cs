@@ -11,8 +11,10 @@ namespace ArnoAdminCore.Base.Services
     {
         public BaseRepository<TEntity> Repository { get; }
         public IEnumerable<TEntity> FindAll();
+        public Task<IEnumerable<TEntity>> FindAllAsync();
         public IEnumerable<TEntity> FindAll(BaseSearch pageSearch);
-        public PageList<TEntity> FindAll(BasePageSearch pageSearch);
+        public Task<IEnumerable<TEntity>> FindAllAsync(BaseSearch searcher);
+        public PageList<TEntity> FindPage(BasePageSearch pageSearch);
         public TEntity FindById(long id);
         public IEnumerable<TEntity> FindByIds(IEnumerable<long> ids);
         public TEntity Add(TEntity entity);

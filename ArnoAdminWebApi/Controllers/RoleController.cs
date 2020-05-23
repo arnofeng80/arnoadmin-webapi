@@ -32,7 +32,7 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost("list")]
         public Result PageList(RoleSearch search)
         {
-            PageList<Role> list = _roleService.FindAll(search);
+            PageList<Role> list = _roleService.FindPage(search);
             return Result.Ok(list);
         }
 

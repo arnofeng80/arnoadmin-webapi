@@ -39,13 +39,14 @@ namespace ArnoAdminWebApi.Controllers
             {
                 return Result.Error("用戶名或密碼錯誤");
             }
-
+            HttpContext.Session.SetString("code", "123456");
             return Result.Ok();
         }
 
         [HttpPost("logout")]
         public Result Logout()
         {
+            String aa = HttpContext.Session.GetString("code");
             return Result.Ok();
         }
 

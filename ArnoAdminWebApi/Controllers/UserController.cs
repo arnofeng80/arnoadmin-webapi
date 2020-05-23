@@ -3,7 +3,7 @@ using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.SystemManage.Services;
-using ArnoAdminCore.Utils;
+using ArnoAdminCore.Utils.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,7 +31,7 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost("list")]
         public Result PageList(UserSearch search)
         {
-            PageList<User> list = _userService.FindAll(search);
+            PageList<User> list = _userService.FindPage(search);
             return Result.Ok(list);
         }
 
@@ -133,35 +133,12 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPost("export")]
-        //public HttpResponseMessage exportData(UserSearch search)
-        public FileContentResult exportData(UserSearch search)
+        public FileResult exportData(UserSearch search)
         {
-            var list = _userService.FindAll();
+            var list = _userService.FindAll(search);
             ExcelHelper<User> excel = new ExcelHelper<User>();
-
-            //var response = new HttpResponseMessage(HttpStatusCode.OK);
-            //response.Content = new StreamContent(excel.CreateExportMemoryStream(list.ToList(), "", null));
-            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            //return response;
-
-            //HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            //response.Content = new StreamContent(excel.CreateExportMemoryStream(list.ToList(), "", null));
-            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.ms-excel");
-            //response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            //{
-            //    FileName = "test.xlsx"
-            //};
-            //return response;
-            var stream = excel.CreateExportMemoryStream(list.ToList(), "", null);
-            byte[] bytes = new byte[stream.Length];
-            stream.Read(bytes, 0, bytes.Length);
-
-            return new FileContentResult(bytes, "application/vnd.ms-excel");
-            
-
-            //var actionresult = new FileStreamResult(excel.CreateExportMemoryStream(list.ToList(), "", null), "application/vnd.ms-excel");
-            //actionresult.FileDownloadName = "test.xlsx";
-            //return actionresult;
+            var actionresult = new FileStreamResult(excel.CreateExportMemoryStream(list.ToList(), "", null), "application/vnd.ms-excel");
+            return actionresult;
         }
     }
 }
