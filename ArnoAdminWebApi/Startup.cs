@@ -12,6 +12,7 @@ using ArnoAdminCore.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,26 @@ namespace ArnoAdminWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Session内存缓存
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
+            ////启用内存缓存(该步骤需在AddSession()调用前使用)
+            //services.AddDistributedMemoryCache();//启用session之前必须先添加内存
+
+            //services.AddSession(options =>
+            //{
+            //    options.Cookie.Name = ".AdventureWorks.Session";
+            //    options.IdleTimeout = TimeSpan.FromSeconds(1800);//设置session的过期时间
+            //    options.Cookie.HttpOnly = true;//设置在浏览器不能通过js获得该cookie的值
+            //});
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            #endregion
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.Converters.Add(new LongJsonConverter());
@@ -54,6 +75,8 @@ namespace ArnoAdminWebApi
             services.AddScoped<MenuRepository>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();
+            //services.AddSingleton<IRoleService, RoleService>();
+            //services.AddSingleton<IUserService, UserService>();
             services.AddDbContext<SystemDbContext>(options =>
                    options.UseSqlServer(GlobalContext.SystemConfig.DBConnectionString));
 
@@ -69,6 +92,8 @@ namespace ArnoAdminWebApi
             }
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthorization();
 

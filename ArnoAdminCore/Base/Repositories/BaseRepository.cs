@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -124,6 +125,18 @@ namespace ArnoAdminCore.Base.Repositories
         {
             var entity = FindById(id);
             Delete(entity);
+        }
+        public void Delete(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                Delete(entity);
+            }
+        }
+        public void Delete(Expression<Func<TEntity, bool>> condition) 
+        {
+            IEnumerable<TEntity> entities = _context.Set<TEntity>().Where(condition);
+            Delete(entities);
         }
         public bool Exists(TEntity entity)
         {

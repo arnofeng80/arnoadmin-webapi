@@ -28,7 +28,7 @@ namespace ArnoAdminCore.Base.Services.Impl
         {
             return _repo.FindAll(searcher);
         }
-        public virtual PageList<TEntity> FindAll(BasePageSearch pageSearcher)
+        public virtual PageList<TEntity> FindPage(BasePageSearch pageSearcher)
         {
             return _repo.FindAll(pageSearcher);
         }

@@ -12,7 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace ArnoAdminCore.Utils
+namespace ArnoAdminCore.Utils.Excel
 {
     public class NPOIMemoryStream : MemoryStream
     {
@@ -83,106 +83,89 @@ namespace ArnoAdminCore.Utils
             ISheet sheet = workbook.CreateSheet();
 
             Type type = typeof(T);
+            List<PropertyInfo> exportColumns = new List<PropertyInfo>();
             PropertyInfo[] properties = ReflectionHelper.GetProperties(type, columns);
 
             ICellStyle dateStyle = workbook.CreateCellStyle();
             IDataFormat format = workbook.CreateDataFormat();
             dateStyle.DataFormat = format.GetFormat("yyyy-MM-dd");
 
-            #region 取得每列的列寬（最大寬度）
-            int[] arrColWidth = new int[properties.Length];
+            #region 列頭及樣式
+            IRow headerRow = sheet.CreateRow(0);
+            ICellStyle headStyle = workbook.CreateCellStyle();
+            headStyle.Alignment = HorizontalAlignment.Center;
+            IFont font = workbook.CreateFont();
+            font.FontHeightInPoints = 10;
+            font.IsBold = true;
+            headStyle.SetFont(font);
+
+            int colIndex = 0;
             for (int columnIndex = 0; columnIndex < properties.Length; columnIndex++)
             {
-                //GBK對應的code page是CP936
-                arrColWidth[columnIndex] = properties[columnIndex].Name.Length;
-            }
-            #endregion
-            for (int rowIndex = 0; rowIndex < list.Count; rowIndex++)
-            {
-                #region 新建表，填充表頭，填充列頭，樣式
-                if (rowIndex == 65535 || rowIndex == 0)
+                PropertyInfo prop = properties[columnIndex];
+                ExportAttribute exportAttr = prop.GetCustomAttribute<ExportAttribute>();
+                if (exportAttr != null)
                 {
-                    if (rowIndex != 0)
+                    exportColumns.Add(prop);
+                    string desc;
+                    if (String.IsNullOrWhiteSpace(exportAttr.Description))
                     {
-                        sheet = workbook.CreateSheet();
-                    }
-
-                    #region 表頭及樣式
-                    {
-                        IRow headerRow = sheet.CreateRow(0);
-                        headerRow.HeightInPoints = 25;
-                        headerRow.CreateCell(0).SetCellValue(sHeaderText);
-
-                        ICellStyle headStyle = workbook.CreateCellStyle();
-                        headStyle.Alignment = HorizontalAlignment.Center;
-                        IFont font = workbook.CreateFont();
-                        font.FontHeightInPoints = 20;
-                        font.Boldweight = 700;
-                        headStyle.SetFont(font);
-
-                        headerRow.GetCell(0).CellStyle = headStyle;
-
-                        sheet.AddMergedRegion(new CellRangeAddress(0, 0, 0, properties.Length - 1));
-                    }
-                    #endregion
-
-                    #region 列頭及樣式
-                    {
-                        IRow headerRow = sheet.CreateRow(1);
-                        ICellStyle headStyle = workbook.CreateCellStyle();
-                        headStyle.Alignment = HorizontalAlignment.Center;
-                        IFont font = workbook.CreateFont();
-                        font.FontHeightInPoints = 10;
-                        font.Boldweight = 700;
-                        headStyle.SetFont(font);
-
-                        for (int columnIndex = 0; columnIndex < properties.Length; columnIndex++)
+                        DescriptionAttribute descAttr = prop.GetCustomAttribute<DescriptionAttribute>();
+                        if (descAttr != null)
                         {
-                            // 類屬性如果有Description就用Description當做列名
-                            DescriptionAttribute customAttribute = (DescriptionAttribute)Attribute.GetCustomAttribute(properties[columnIndex], typeof(DescriptionAttribute));
-                            string description = properties[columnIndex].Name;
-                            if (customAttribute != null)
-                            {
-                                description = customAttribute.Description;
-                            }
-                            headerRow.CreateCell(columnIndex).SetCellValue(description);
-                            headerRow.GetCell(columnIndex).CellStyle = headStyle;
-
-                            //設置列寬  
-                            sheet.SetColumnWidth(columnIndex, (arrColWidth[columnIndex] + 1) * 256);
+                            desc = descAttr.Description;
+                        }
+                        else
+                        {
+                            desc = prop.Name;
                         }
                     }
-                    #endregion
+                    else
+                    {
+                        desc = exportAttr.Description;
+                    }
+                    headerRow.CreateCell(colIndex).SetCellValue(desc);
+                    headerRow.GetCell(colIndex).CellStyle = headStyle;
+                    colIndex++;
                 }
-                #endregion
+            }
+            #endregion
 
+            for (int rowIndex = 0; rowIndex < list.Count; rowIndex++)
+            {
                 #region 填充內容
                 ICellStyle contentStyle = workbook.CreateCellStyle();
                 contentStyle.Alignment = HorizontalAlignment.Left;
-                IRow dataRow = sheet.CreateRow(rowIndex + 2); // 前面2行已被佔用
-                for (int columnIndex = 0; columnIndex < properties.Length; columnIndex++)
+                IRow dataRow = sheet.CreateRow(rowIndex + 1);
+                for (int columnIndex = 0; columnIndex < exportColumns.Count; columnIndex++)
                 {
                     ICell newCell = dataRow.CreateCell(columnIndex);
                     newCell.CellStyle = contentStyle;
 
-                    string drValue = properties[columnIndex].GetValue(list[rowIndex], null).ParseToString();
+                    object drValue = exportColumns[columnIndex].GetValue(list[rowIndex], null);
                     switch (properties[columnIndex].PropertyType.ToString())
                     {
                         case "System.String":
-                            newCell.SetCellValue(drValue);
+                        case "System.Int64":
+                        case "System.Nullable`1[System.Int64]":
+                            newCell.SetCellValue(drValue.ParseToString());
                             break;
-
                         case "System.DateTime":
                         case "System.Nullable`1[System.DateTime]":
-                            newCell.SetCellValue(drValue.ParseToDateTime());
-                            newCell.CellStyle = dateStyle; //格式化顯示  
+                            DateTime? d = drValue.ParseToDateTime();
+                            if(d == null)
+                            {
+                                newCell.SetCellValue(String.Empty);
+                            } else
+                            {
+                                newCell.SetCellValue(d.Value);
+                                newCell.CellStyle = dateStyle;
+                            }
                             break;
-
                         case "System.Boolean":
                         case "System.Nullable`1[System.Boolean]":
                             newCell.SetCellValue(drValue.ParseToBool());
                             break;
-
                         case "System.Byte":
                         case "System.Nullable`1[System.Byte]":
                         case "System.Int16":
@@ -191,26 +174,15 @@ namespace ArnoAdminCore.Utils
                         case "System.Nullable`1[System.Int32]":
                             newCell.SetCellValue(drValue.ParseToInt());
                             break;
-
-                        case "System.Int64":
-                        case "System.Nullable`1[System.Int64]":
-                            newCell.SetCellValue(drValue.ParseToString());
-                            break;
-
                         case "System.Double":
                         case "System.Nullable`1[System.Double]":
-                            newCell.SetCellValue(drValue.ParseToDouble());
-                            break;
-
                         case "System.Decimal":
                         case "System.Nullable`1[System.Decimal]":
                             newCell.SetCellValue(drValue.ParseToDouble());
                             break;
-
-                        case "System.DBNull":
-                            newCell.SetCellValue(string.Empty);
-                            break;
-
+                        //case "system.dbnull":
+                        //    newcell.setcellvalue(string.empty);
+                        //    break;
                         default:
                             newCell.SetCellValue(string.Empty);
                             break;

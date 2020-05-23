@@ -13,18 +13,12 @@ namespace ArnoAdminCore.Utils.Extension
         public static long ParseToLong(this object obj, long defaultValue)
         {
             if (obj == null) return defaultValue;
-            try
-            {
-                long.TryParse(obj.ToString(), out defaultValue);
-            }
-            catch { }
-            return defaultValue;
+            return ParseToLong(obj.ToString(), defaultValue);
         }
         public static long ParseToLong(this object obj)
         {
             return ParseToLong(obj, default);
         }
-
         public static long ParseToLong(this String str, long defaultValue)
         {
             if (String.IsNullOrWhiteSpace(str)) return defaultValue;
@@ -45,18 +39,12 @@ namespace ArnoAdminCore.Utils.Extension
         public static int ParseToInt(this object obj, int defaultValue)
         {
             if (obj == null) return defaultValue;
-            try
-            {
-                int.TryParse(obj.ToString(), out defaultValue);
-            }
-            catch { }
-            return defaultValue;
+            return ParseToInt(obj.ToString(), defaultValue);
         }
         public static int ParseToInt(this object obj)
         {
             return ParseToInt(obj, default);
         }
-
         public static int ParseToInt(this String str, int defaultValue)
         {
             if (String.IsNullOrWhiteSpace(str)) return defaultValue;
@@ -77,24 +65,18 @@ namespace ArnoAdminCore.Utils.Extension
         public static short ParseToShort(this object obj, short defaultValue)
         {
             if (obj == null) return defaultValue;
-            try
-            {
-                short.TryParse(Convert.ToString(obj), out defaultValue);
-            }
-            catch { }
-            return defaultValue;
+            return ParseToShort(obj.ToString(), defaultValue);
         }
         public static short ParseToShort(this object obj)
         {
             return ParseToShort(obj, default);
         }
-
         public static short ParseToShort(this String str, short defaultValue)
         {
             if (String.IsNullOrWhiteSpace(str)) return defaultValue;
             try
             {
-                short.TryParse(Convert.ToString(str), out defaultValue);
+                short.TryParse(str, out defaultValue);
             }
             catch { }
             return defaultValue;
@@ -106,223 +88,160 @@ namespace ArnoAdminCore.Utils.Extension
         #endregion
 
         #region 转换为demical
-        /// <summary>
-        /// 将object转换为demical，若转换失败，则返回指定值。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static decimal ParseToDecimal(this object str, decimal defaultValue)
+        public static Decimal ParseToDecimal(this object obj, Decimal defaultValue)
         {
+            if (obj == null) return defaultValue;
+            return ParseToDecimal(obj.ToString(), defaultValue);
+        }
+        public static Decimal ParseToDecimal(this object obj)
+        {
+            return ParseToDecimal(obj, default);
+        }
+        public static Decimal ParseToDecimal(this String str, Decimal defaultValue)
+        {
+            if (String.IsNullOrWhiteSpace(str)) return defaultValue;
             try
             {
-                return decimal.Parse(str.ToString());
+                Decimal.TryParse(str, out defaultValue);
+            }
+            catch { }
+            return defaultValue;
+        }
+        public static Decimal ParseToDecimal(this String str)
+        {
+            return ParseToDecimal(str, default);
+        }
+        #endregion
+
+        #region 转化为bool
+       public static bool ParseToBool(this object obj, bool defaultValue)
+        {
+            if (obj == null) return defaultValue;
+            return ParseToBool(obj.ToString(), defaultValue);
+        }
+        public static bool ParseToBool(this object obj)
+        {
+            return ParseToBool(obj, default);
+        }
+        public static bool ParseToBool(this String str, bool defaultValue)
+        {
+            if (String.IsNullOrWhiteSpace(str)) return defaultValue;
+            try
+            {
+                bool.TryParse(str, out defaultValue);
+            }
+            catch { }
+            return defaultValue;
+        }
+        public static bool ParseToBool(this String str)
+        {
+            return ParseToBool(str, default);
+        }
+        #endregion
+
+        #region 转换为float
+        public static float ParseToFloat(this object obj, float defaultValue)
+        {
+            if (obj == null) return defaultValue;
+            return ParseToFloat(obj.ToString(), defaultValue);
+        }
+        public static float ParseToFloat(this object obj)
+        {
+            return ParseToFloat(obj, default);
+        }
+        public static float ParseToFloat(this String str, float defaultValue)
+        {
+            if (String.IsNullOrWhiteSpace(str)) return defaultValue;
+            try
+            {
+                float.TryParse(str, out defaultValue);
+            }
+            catch { }
+            return defaultValue;
+        }
+        public static float ParseToFloat(this String str)
+        {
+            return ParseToFloat(str, default);
+        }
+        #endregion
+
+        #region 转换为double
+        public static double ParseToDouble(this object obj, double defaultValue)
+        {
+            if (obj == null) return defaultValue;
+            return ParseToDouble(obj.ToString(), defaultValue);
+        }
+        public static double ParseToDouble(this object obj)
+        {
+            return ParseToDouble(obj, default);
+        }
+        public static double ParseToDouble(this String str, double defaultValue)
+        {
+            if (String.IsNullOrWhiteSpace(str)) return defaultValue;
+            try
+            {
+                double.TryParse(str, out defaultValue);
+            }
+            catch { }
+            return defaultValue;
+        }
+        public static double ParseToDouble(this String str)
+        {
+            return ParseToDouble(str, default);
+        }
+        #endregion
+
+        #region 转换为DateTime
+        public static DateTime? ParseToDateTime(this object obj, DateTime? defaultValue)
+        {
+            if (obj == null) return defaultValue;
+            return ParseToDateTime(obj.ToString(), defaultValue);
+        }
+        public static DateTime? ParseToDateTime(this object obj)
+        {
+            return ParseToDateTime(obj, default);
+        }
+        public static DateTime? ParseToDateTime(this string str, DateTime? defaultValue)
+        {
+            if (String.IsNullOrWhiteSpace(str)) return defaultValue;
+            try
+            {
+                if (str.Contains("-") || str.Contains("/"))
+                {
+                    return DateTime.Parse(str);
+                }
+                else
+                {
+                    int length = str.Length;
+                    switch (length)
+                    {
+                        case 4:
+                            return DateTime.ParseExact(str, "yyyy", System.Globalization.CultureInfo.CurrentCulture);
+                        case 6:
+                            return DateTime.ParseExact(str, "yyyyMM", System.Globalization.CultureInfo.CurrentCulture);
+                        case 8:
+                            return DateTime.ParseExact(str, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+                        case 10:
+                            return DateTime.ParseExact(str, "yyyyMMddHH", System.Globalization.CultureInfo.CurrentCulture);
+                        case 12:
+                            return DateTime.ParseExact(str, "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture);
+                        case 14:
+                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
+                        default:
+                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
+                    }
+                }
             }
             catch
             {
                 return defaultValue;
             }
         }
-
-        /// <summary>
-        /// 将object转换为demical，若转换失败，则返回0。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static decimal ParseToDecimal(this object str)
+        public static DateTime? ParseToDateTime(this string str)
         {
-            try
-            {
-                return decimal.Parse(str.ToString());
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-        #endregion
-
-        #region 转化为bool
-        /// <summary>
-        /// 将object转换为bool，若转换失败，则返回false。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static bool ParseToBool(this object str)
-        {
-            try
-            {
-                return bool.Parse(str.ToString());
-            }
-            catch
-            {
-                return false;
-            }
+            return ParseToDateTime(str, default);
         }
 
-        /// <summary>
-        /// 将object转换为bool，若转换失败，则返回指定值。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static bool ParseToBool(this object str, bool result)
-        {
-            try
-            {
-                return bool.Parse(str.ToString());
-            }
-            catch
-            {
-                return result;
-            }
-        }
-        #endregion
-
-        #region 转换为float
-        /// <summary>
-        /// 将object转换为float，若转换失败，则返回0。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static float ParseToFloat(this object str)
-        {
-            try
-            {
-                return float.Parse(str.ToString());
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// 将object转换为float，若转换失败，则返回指定值。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static float ParseToFloat(this object str, float result)
-        {
-            try
-            {
-                return float.Parse(str.ToString());
-            }
-            catch
-            {
-                return result;
-            }
-        }
-        #endregion
-
-        #region 转换为Guid
-        /// <summary>
-        /// 将string转换为Guid，若转换失败，则返回Guid.Empty。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static Guid ParseToGuid(this string str)
-        {
-            try
-            {
-                return new Guid(str);
-            }
-            catch
-            {
-                return Guid.Empty;
-            }
-        }
-        #endregion
-
-        #region 转换为DateTime
-        /// <summary>
-        /// 将string转换为DateTime，若转换失败，则返回日期最小值。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static DateTime ParseToDateTime(this string str)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(str))
-                {
-                    return DateTime.MinValue;
-                }
-                if (str.Contains("-") || str.Contains("/"))
-                {
-                    return DateTime.Parse(str);
-                }
-                else
-                {
-                    int length = str.Length;
-                    switch (length)
-                    {
-                        case 4:
-                            return DateTime.ParseExact(str, "yyyy", System.Globalization.CultureInfo.CurrentCulture);
-                        case 6:
-                            return DateTime.ParseExact(str, "yyyyMM", System.Globalization.CultureInfo.CurrentCulture);
-                        case 8:
-                            return DateTime.ParseExact(str, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-                        case 10:
-                            return DateTime.ParseExact(str, "yyyyMMddHH", System.Globalization.CultureInfo.CurrentCulture);
-                        case 12:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture);
-                        case 14:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
-                        default:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
-                    }
-                }
-            }
-            catch
-            {
-                return DateTime.MinValue;
-            }
-        }
-
-        /// <summary>
-        /// 将string转换为DateTime，若转换失败，则返回默认值。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        public static DateTime ParseToDateTime(this string str, DateTime? defaultValue)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(str))
-                {
-                    return defaultValue.GetValueOrDefault();
-                }
-                if (str.Contains("-") || str.Contains("/"))
-                {
-                    return DateTime.Parse(str);
-                }
-                else
-                {
-                    int length = str.Length;
-                    switch (length)
-                    {
-                        case 4:
-                            return DateTime.ParseExact(str, "yyyy", System.Globalization.CultureInfo.CurrentCulture);
-                        case 6:
-                            return DateTime.ParseExact(str, "yyyyMM", System.Globalization.CultureInfo.CurrentCulture);
-                        case 8:
-                            return DateTime.ParseExact(str, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-                        case 10:
-                            return DateTime.ParseExact(str, "yyyyMMddHH", System.Globalization.CultureInfo.CurrentCulture);
-                        case 12:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture);
-                        case 14:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
-                        default:
-                            return DateTime.ParseExact(str, "yyyyMMddHHmmss", System.Globalization.CultureInfo.CurrentCulture);
-                    }
-                }
-            }
-            catch
-            {
-                return defaultValue.GetValueOrDefault();
-            }
-        }
         #endregion
 
         #region 转换为string
@@ -335,7 +254,7 @@ namespace ArnoAdminCore.Utils.Extension
         {
             try
             {
-                if (obj == null)
+                if (obj == null || obj == DBNull.Value)
                 {
                     return string.Empty;
                 }
@@ -368,43 +287,6 @@ namespace ArnoAdminCore.Utils.Extension
                 return string.Empty;
             }
 
-        }
-        #endregion
-
-        #region 转换为double
-        /// <summary>
-        /// 将object转换为double，若转换失败，则返回0。不抛出异常。  
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static double ParseToDouble(this object obj)
-        {
-            try
-            {
-                return double.Parse(obj.ToString());
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// 将object转换为double，若转换失败，则返回指定值。不抛出异常。  
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        public static double ParseToDouble(this object str, double defaultValue)
-        {
-            try
-            {
-                return double.Parse(str.ToString());
-            }
-            catch
-            {
-                return defaultValue;
-            }
         }
         #endregion
 
