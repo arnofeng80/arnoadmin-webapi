@@ -87,6 +87,6 @@ namespace ArnoAdminCore.Base.Constants
 
     public class DictConst
     {
-        public const String NORMAL_ENABLE = "0";
+        public const String NORMAL_ENABLE = "1";
     }
 }

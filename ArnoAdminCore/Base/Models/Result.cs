@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net;
 using System.Text;
 
 namespace ArnoAdminCore.Base.Models
 {
     public class Result
     {
-        public int code { get; set; }
+        public HttpStatusCode code { get; set; }
         public String msg { get; set; }
         public object data { get; set; }
 
@@ -16,12 +17,12 @@ namespace ArnoAdminCore.Base.Models
         {
 
         }
-        public Result(int code, String msg)
+        public Result(HttpStatusCode code, String msg)
         {
             this.code = code;
             this.msg = msg;
         }
-        public Result(int code, String msg, object data)
+        public Result(HttpStatusCode code, String msg, object data)
         {
             this.code = code;
             this.msg = msg;
@@ -29,7 +30,7 @@ namespace ArnoAdminCore.Base.Models
         }
         public static Result Ok(String msg, Object data)
         {
-            return new Result(HttpStatus.SUCCESS, msg, data);
+            return new Result(HttpStatusCode.OK, msg, data);
         }
         public static Result Ok(Object data)
         {
@@ -53,7 +54,7 @@ namespace ArnoAdminCore.Base.Models
         }
         public static Result Error(String msg, Object data)
         {
-            return new Result(HttpStatus.ERROR, msg, data);
+            return new Result(HttpStatusCode.InternalServerError, msg, data);
         }
     }
 }
