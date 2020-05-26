@@ -75,6 +75,7 @@ namespace ArnoAdminWebApi
             services.AddScoped<MenuRepository>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
             //services.AddSingleton<IRoleService, RoleService>();
             //services.AddSingleton<IUserService, UserService>();
             services.AddDbContext<SystemDbContext>(options =>

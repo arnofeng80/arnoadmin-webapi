@@ -34,12 +34,20 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost("login")]
         public async Task<Result> Login(LoginBody loginBody)
         {
-            var user = await _userRepo.DbContext.Set<User>().Where(x => x.LoginName == loginBody.username).FirstOrDefaultAsync();
+            if(String.IsNullOrWhiteSpace(loginBody.UserName) || String.IsNullOrWhiteSpace(loginBody.Password))
+            {
+                return Result.Error("請輸入用戶名和密碼");
+            }
+            var user = await _userRepo.DbContext.Set<User>().Where(x => x.LoginName == loginBody.UserName && x.Password == EncryptHelper.HMACMD5Encoding(loginBody.Password.Trim())).FirstOrDefaultAsync();
             if (user == null)
             {
                 return Result.Error("用戶名或密碼錯誤");
+            } else
+            {
+                HttpContext.Session.SetString("User", "123456");
+                String aa = HttpContext.Session.Id;
             }
-            HttpContext.Session.SetString("code", "123456");
+
             return Result.Ok();
         }
 
