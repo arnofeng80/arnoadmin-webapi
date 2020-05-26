@@ -1,6 +1,7 @@
 ﻿using ArnoAdminCore.Base.Services.Impl;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Repositories;
+using ArnoAdminCore.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,6 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
             if (String.IsNullOrWhiteSpace(entity.Password))
             {
                 Repository.DbContext.Entry<User>(entity).Property("Password").IsModified = false;
-            } else
-            {
-                entity.Password = entity.Password.Trim();
             }
             return base.UpdatePartial(entity);
         }

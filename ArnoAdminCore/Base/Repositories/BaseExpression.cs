@@ -1,25 +1,27 @@
 ﻿using ArnoAdminCore.Base.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 
-namespace ArnoAdminCore.Utils
+namespace ArnoAdminCore.Base.Repositories
 {
-    public class ExpressionHelper<T>
+    public class BaseExpression<TEntity>
     {
-        private static readonly MethodInfo containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
-        private static readonly MethodInfo startsWithMethod = typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) });
-        private static readonly MethodInfo endsWithMethod = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) });
-        public static Expression<Func<T, bool>> CreateExpression(Object searcher)
+        protected static readonly MethodInfo containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
+        protected static readonly MethodInfo startsWithMethod = typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) });
+        protected static readonly MethodInfo endsWithMethod = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) });
+        protected Expression<Func<TEntity, bool>> CreateExpression(Object searcher)
         {
-            ParameterExpression parameter = Expression.Parameter(typeof(T), "p");
+            ParameterExpression parameter = Expression.Parameter(typeof(TEntity), "p");
             PropertyInfo[] props = searcher.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
             Expression query = null;
             foreach (PropertyInfo prop in props)
             {
                 object val = prop.GetValue(searcher);
-                if(val != null)
+                if (val != null)
                 {
                     Expression exp = GetExpression(searcher, parameter, prop);
                     if (exp != null)
@@ -28,10 +30,10 @@ namespace ArnoAdminCore.Utils
                     }
                 }
             }
-            return query == null ? null : Expression.Lambda<Func<T, bool>>(query, parameter);
+            return query == null ? null : Expression.Lambda<Func<TEntity, bool>>(query, parameter);
         }
 
-        private static Expression GetExpression(object searcher, ParameterExpression parameter, PropertyInfo prop)
+        protected virtual Expression GetExpression(object searcher, ParameterExpression parameter, PropertyInfo prop)
         {
             object val = prop.GetValue(searcher);
 
@@ -59,26 +61,26 @@ namespace ArnoAdminCore.Utils
             return null;
         }
 
-        public static IOrderedQueryable<T> OrderBy(IQueryable<T> source, string property)
+        public IOrderedQueryable<TEntity> OrderBy(IQueryable<TEntity> source, string property)
         {
             return ApplyOrder(source, property, "OrderBy");
         }
-        public static IOrderedQueryable<T> OrderByDescending(IQueryable<T> source, string property)
+        public IOrderedQueryable<TEntity> OrderByDescending(IQueryable<TEntity> source, string property)
         {
             return ApplyOrder(source, property, "OrderByDescending");
         }
-        public static IOrderedQueryable<T> ThenBy(IOrderedQueryable<T> source, string property)
+        public IOrderedQueryable<TEntity> ThenBy(IOrderedQueryable<TEntity> source, string property)
         {
             return ApplyOrder(source, property, "ThenBy");
         }
-        public static IOrderedQueryable<T> ThenByDescending(IOrderedQueryable<T> source, string property)
+        public IOrderedQueryable<TEntity> ThenByDescending(IOrderedQueryable<TEntity> source, string property)
         {
             return ApplyOrder(source, property, "ThenByDescending");
         }
-        static IOrderedQueryable<T> ApplyOrder(IQueryable<T> source, string property, string methodName)
+        protected IOrderedQueryable<TEntity> ApplyOrder(IQueryable<TEntity> source, string property, string methodName)
         {
             string[] props = property.Split('.');
-            Type type = typeof(T);
+            Type type = typeof(TEntity);
             ParameterExpression arg = Expression.Parameter(type, "x");
             Expression expr = arg;
             foreach (string prop in props)
@@ -87,7 +89,7 @@ namespace ArnoAdminCore.Utils
                 expr = Expression.Property(expr, pi);
                 type = pi.PropertyType;
             }
-            Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
+            Type delegateType = typeof(Func<,>).MakeGenericType(typeof(TEntity), type);
             LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
 
             object result = typeof(Queryable).GetMethods().Single(
@@ -95,9 +97,9 @@ namespace ArnoAdminCore.Utils
                             && method.IsGenericMethodDefinition
                             && method.GetGenericArguments().Length == 2
                             && method.GetParameters().Length == 2)
-                    .MakeGenericMethod(typeof(T), type)
+                    .MakeGenericMethod(typeof(TEntity), type)
                     .Invoke(null, new object[] { source, lambda });
-            return (IOrderedQueryable<T>)result;
+            return (IOrderedQueryable<TEntity>)result;
         }
     }
 }

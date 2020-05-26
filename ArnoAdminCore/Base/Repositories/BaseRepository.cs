@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ArnoAdminCore.Base.Repositories
 {
-    public class BaseRepository<TEntity> where TEntity : BaseEntity
+    public class BaseRepository<TEntity> : BaseExpression<TEntity> where TEntity : BaseEntity
     {
         protected DbContext _context;
         public DbContext DbContext { get => this._context; }
@@ -39,7 +39,7 @@ namespace ArnoAdminCore.Base.Repositories
             {
                 throw new ArgumentNullException(nameof(searcher));
             }
-            var exp = ExpressionHelper<TEntity>.CreateExpression(searcher);
+            var exp = CreateExpression(searcher);
 
             var query = _context.Set<TEntity>().Where(x => x.Deleted == 0);
             if(exp != null)
@@ -60,7 +60,7 @@ namespace ArnoAdminCore.Base.Repositories
 
             if (!String.IsNullOrWhiteSpace(searcher.SortColumn))
             {
-                query = searcher.SortType == "descending" ? ExpressionHelper<TEntity>.OrderByDescending(query, searcher.SortColumn) : ExpressionHelper<TEntity>.OrderBy(query, searcher.SortColumn);
+                query = searcher.SortType == "descending" ? OrderByDescending(query, searcher.SortColumn) : OrderBy(query, searcher.SortColumn);
             }
 
             if (pageSearcher != null)

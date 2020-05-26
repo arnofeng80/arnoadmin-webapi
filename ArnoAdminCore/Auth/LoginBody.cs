@@ -6,8 +6,8 @@ namespace ArnoAdminCore.Auth
 {
     public class LoginBody
     {
-        public String username { get; set; }
+        public String UserName { get; set; }
 
-        public String password { get; set; }
+        public String Password { get; set; }
     }
 }

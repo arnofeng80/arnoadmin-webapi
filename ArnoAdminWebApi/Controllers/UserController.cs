@@ -3,10 +3,12 @@ using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.SystemManage.Services;
+using ArnoAdminCore.Utils;
 using ArnoAdminCore.Utils.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,6 +57,7 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost]
         public Result Add(User entity)
         {
+            entity.Password = EncryptHelper.PasswordEncoding(entity.Password.Trim());
             _userService.Add(entity);
             return Result.Ok();
         }
@@ -65,6 +68,10 @@ namespace ArnoAdminWebApi.Controllers
             foreach (UserRole ur in entity.UserRoles)
             {
                 ur.User = entity;
+            }
+            if(!String.IsNullOrWhiteSpace(entity.Password))
+            {
+                entity.Password = EncryptHelper.PasswordEncoding(entity.Password.Trim());
             }
             _userService.UpdateWithRole(entity);
             return Result.Ok();
@@ -102,7 +109,7 @@ namespace ArnoAdminWebApi.Controllers
             {
                 return Result.Error("User Not Found");
             }
-            user.Password = entity.Password;
+            user.Password = EncryptHelper.PasswordEncoding(entity.Password.Trim());
             _userService.UpdatePartial(user);
 
             return Result.Ok();
@@ -129,6 +136,15 @@ namespace ArnoAdminWebApi.Controllers
                     list = excel.ImportFromExcel(ms);
                 }
             }
+
+            if(list != null && list.Count > 0)
+            {
+                foreach(User u in list)
+                {
+                    u.Password = EncryptHelper.PasswordEncoding(u.Password.Trim());
+                }
+            }
+
             return Result.Ok();
         }
 
