@@ -1,6 +1,7 @@
 ﻿using ArnoAdminCore.SystemManage.Models.Poco;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace ArnoAdminCore.SystemManage.Models.Config
 {

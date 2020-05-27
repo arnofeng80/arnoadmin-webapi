@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using System.Linq;
+using ArnoAdminCore.Utils;
 
 namespace ArnoAdminCore.Context
 {
@@ -29,14 +31,36 @@ namespace ArnoAdminCore.Context
             => optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory);
 
-        public override EntityEntry<TEntity> Add<TEntity>(TEntity entity)
+        //public override EntityEntry<TEntity> Add<TEntity>(TEntity entity)
+        //{
+        //    BaseEntity baseEntity = entity as BaseEntity;
+        //    if (baseEntity != null)
+        //    {
+        //        baseEntity.Create();
+        //    }
+        //    return base.Add(entity);
+        //}
+
+        public override int SaveChanges()
         {
-            BaseEntity baseEntity = entity as BaseEntity;
-            if(baseEntity != null)
-            {
-                baseEntity.Create();
-            }
-            return base.Add(entity);
+            ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity is BaseEntity).ToList().ForEach(e => {
+                var entry = (BaseEntity)e.Entity;
+                entry.Id = IdGenerator.GetId();
+                entry.CreateTime = entry.UpdateTime = DateTime.Now;
+                entry.CreateBy = entry.UpdateBy = 0;
+                entry.Deleted = 0;
+            });
+
+            ChangeTracker.Entries().Where(e => e.State == EntityState.Modified && e.Entity is BaseEntity).ToList().ForEach(e => ((BaseEntity)e.Entity).UpdateTime = DateTime.Now);
+
+            //ChangeTracker.Entries().Where(e => e.State == EntityState.Deleted && e.Entity is BaseEntity).ToList().ForEach(e => {
+            //    var entry = (BaseEntity)e.Entity;
+            //    entry.UpdateTime = DateTime.Now;
+            //    entry.UpdateBy = 0;
+            //    entry.Deleted = 1;
+            //    e.State = EntityState.Modified;
+            //});
+            return base.SaveChanges();
         }
     }
 }
