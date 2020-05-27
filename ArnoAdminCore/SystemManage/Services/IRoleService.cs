@@ -1,14 +1,11 @@
-﻿using ArnoAdminCore.Base.Models;
-using ArnoAdminCore.Base.Services;
+﻿using ArnoAdminCore.Base.Services;
 using ArnoAdminCore.SystemManage.Models.Poco;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ArnoAdminCore.SystemManage.Services
 {
-    public interface IRoleService: IBaseCRUDService<Role>
+    public interface IRoleService : IBaseCRUDService<Role>
     {
         public Role AddWithMenu(Role entity);
         public Role UpdateWithMenu(Role entity);

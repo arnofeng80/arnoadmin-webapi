@@ -76,12 +76,13 @@ namespace ArnoAdminWebApi
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
-            //services.AddSingleton<IRoleService, RoleService>();
-            //services.AddSingleton<IUserService, UserService>();
-            services.AddDbContext<SystemDbContext>(options =>
-                   options.UseSqlServer(GlobalContext.SystemConfig.DBConnectionString));
+            services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<IDictService, DictService>();
 
             GlobalContext.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
+
+            services.AddDbContext<SystemDbContext>(options =>
+                   options.UseSqlServer(GlobalContext.SystemConfig.DBConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
