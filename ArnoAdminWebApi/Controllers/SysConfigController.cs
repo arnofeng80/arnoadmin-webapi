@@ -4,6 +4,7 @@ using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Repositories;
+using ArnoAdminCore.SystemManage.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,35 +15,34 @@ namespace ArnoAdminWebApi.Controllers
     [ApiController]
     public class SysConfigController : ControllerBase
     {
-        private readonly SysConfigRepository _sysConfigRepo;
+        private readonly IConfigService _configService;
         private readonly IMapper _mapper;
         private readonly ILogger<SysConfigController> _logger;
 
-        public SysConfigController(ILogger<SysConfigController> logger, SysConfigRepository sysConfigRepo, IMapper mapper)
+        public SysConfigController(ILogger<SysConfigController> logger, IConfigService configService, IMapper mapper)
         {
             _logger = logger;
-            _sysConfigRepo = sysConfigRepo ?? throw new ArgumentNullException(nameof(sysConfigRepo));
+            _configService = configService ?? throw new ArgumentNullException(nameof(configService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet("configKey/{configKey}")]
-        public async Task<Result> configKey(String configKey)
+        public Result configKey(String configKey)
         {
-            var list = await _sysConfigRepo.FindByKeyAsync(configKey);
-            return Result.Ok(list);
+            return Result.Ok(_configService.FindByKey(configKey));
         }
 
-        [HttpGet("list")]
-        public Result list([FromQuery]SysConfigSearch search)
+        [HttpPost("list")]
+        public Result list(SysConfigSearch search)
         {
-            PageList<SysConfig> list = _sysConfigRepo.FindAll(search);
+            PageList<SysConfig> list = _configService.FindPage(search);
             return Result.Ok(list);
         }
 
         [HttpGet("{id}")]
         public Result GetSysConfig(long id)
         {
-            var sysConfig = _sysConfigRepo.FindById(id);
+            var sysConfig = _configService.FindById(id);
 
             if (sysConfig == null)
             {
@@ -55,24 +55,24 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost]
         public Result Add(SysConfig entity)
         {
-            _sysConfigRepo.Add(entity);
-            _sysConfigRepo.Save();
+            _configService.Add(entity);
             return Result.Ok();
         }
 
         [HttpPut]
         public Result Update(SysConfig entity)
         {
-            _sysConfigRepo.Update(entity);
-            _sysConfigRepo.Save();
+            _configService.Update(entity);
             return Result.Ok();
         }
 
-        [HttpDelete("{id}")]
-        public Result Delete(long id)
+        [HttpDelete]
+        public Result Delete(long[] ids)
         {
-            _sysConfigRepo.Delete(id);
-            _sysConfigRepo.Save();
+            foreach (long id in ids)
+            {
+                _configService.Delete(id);
+            }
             return Result.Ok();
         }
     }

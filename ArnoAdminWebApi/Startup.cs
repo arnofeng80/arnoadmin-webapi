@@ -78,6 +78,7 @@ namespace ArnoAdminWebApi
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IDictService, DictService>();
+            services.AddScoped<IConfigService, ConfigService>();
 
             GlobalContext.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
 
