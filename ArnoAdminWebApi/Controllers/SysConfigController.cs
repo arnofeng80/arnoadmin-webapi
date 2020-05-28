@@ -40,7 +40,7 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Result GetSysConfig(long id)
+        public Result FindById(long id)
         {
             var sysConfig = _configService.FindById(id);
 

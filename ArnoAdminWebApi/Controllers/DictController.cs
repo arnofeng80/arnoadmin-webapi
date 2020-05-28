@@ -44,7 +44,7 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Result GetDict(long id)
+        public Result FindById(long id)
         {
             var dict = _dictService.FindById(id);
 

@@ -40,7 +40,7 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Result GetUser(long id)
+        public Result FindById(long id)
         {
             var user = _userService.FindById(id);
             if (user == null)

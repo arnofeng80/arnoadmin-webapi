@@ -38,7 +38,7 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Result GetMenu(long id)
+        public Result FindById(long id)
         {
             var menu = _menuService.FindById(id);
 

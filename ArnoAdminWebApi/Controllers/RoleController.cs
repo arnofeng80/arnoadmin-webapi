@@ -43,7 +43,7 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Result GetRole(long id)
+        public Result FindById(long id)
         {
             var entity = _roleService.FindById(id);
 

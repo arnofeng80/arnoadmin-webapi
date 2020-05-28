@@ -41,7 +41,7 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Result GetDepartment(long id)
+        public Result FindById(long id)
         {
             var dept = _deptService.FindById(id);
 
