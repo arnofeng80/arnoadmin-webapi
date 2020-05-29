@@ -1,14 +1,17 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ArnoAdminCore.Base;
 using ArnoAdminCore.Base.Repositories;
+using ArnoAdminCore.Cache;
 using ArnoAdminCore.Context;
 using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.SystemManage.Services;
 using ArnoAdminCore.SystemManage.Services.Impl;
 using ArnoAdminCore.Utils;
+using AspectCore.Configuration;
+using AspectCore.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,20 +40,20 @@ namespace ArnoAdminWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            #region SessionÄÚ´æ»º´æ
+            #region Sessionå›€æ¹”é£æ¹”
             //services.Configure<CookiePolicyOptions>(options =>
             //{
             //    options.CheckConsentNeeded = context => true;
             //    options.MinimumSameSitePolicy = SameSiteMode.None;
             //});
-            ////ÆôÓÃÄÚ´æ»º´æ(¸Ã²½ÖèĞèÔÚAddSession()µ÷ÓÃÇ°Ê¹ÓÃ)
-            //services.AddDistributedMemoryCache();//ÆôÓÃsessionÖ®Ç°±ØĞëÏÈÌí¼ÓÄÚ´æ
+            ////ïœ„èššå›€æ¹”é£æ¹”(èœ†ç¥­ç´¬å‰’å©“AddSession()è¦ƒèššïå¦èšš)
+            //services.AddDistributedMemoryCache();//ïœ„èššsessionçœ³ïæ–›å‰•ç‚æ°æ¨“å›€æ¹”
 
             //services.AddSession(options =>
             //{
             //    options.Cookie.Name = ".AdventureWorks.Session";
-            //    options.IdleTimeout = TimeSpan.FromSeconds(1800);//ÉèÖÃsessionµÄ¹ıÆÚÊ±¼ä
-            //    options.Cookie.HttpOnly = true;//ÉèÖÃÔÚä¯ÀÀÆ÷²»ÄÜÍ¨¹ıjs»ñµÃ¸ÃcookieµÄÖµ
+            //    options.IdleTimeout = TimeSpan.FromSeconds(1800);//æ‰¢ç¦»sessionè…”å¾¹ï›ªå¥€æ½”
+            //    options.Cookie.HttpOnly = true;//æ‰¢ç¦»å©“éŠ¡æ“¬ïœ‡ç¥¥å¤”ç±µå¾¹jsé³³è…•èœ†cookieè…”ç¡‰
             //});
 
             services.AddDistributedMemoryCache();
@@ -67,6 +70,7 @@ namespace ArnoAdminWebApi
                 //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
             services.AddScoped<DepartmentRepository>();
             services.AddScoped<UserRepository>();
             services.AddScoped<RoleRepository>();
