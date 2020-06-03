@@ -1,7 +1,6 @@
 ﻿using ArnoAdminCore.SystemManage.Models.Poco;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace ArnoAdminCore.SystemManage.Models.Config
 {
@@ -9,7 +8,8 @@ namespace ArnoAdminCore.SystemManage.Models.Config
     {
         public void Configure(EntityTypeBuilder<Department> builder)
         {
-            builder.ToTable("SysDept");
+            builder.ToTable("SysDept").HasKey(p => p.Id);
+            builder.Property(p => p.DeptName).HasMaxLength(30).IsRequired(true);
         }
     }
 }
