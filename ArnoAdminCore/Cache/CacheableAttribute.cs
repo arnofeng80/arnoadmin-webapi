@@ -13,8 +13,7 @@ namespace ArnoAdminCore.Cache
 {
     public class CacheableAttribute : AbstractInterceptorAttribute
     {
-        private Dictionary<string, object> cacheDict = new Dictionary<string, object>();
-        private object lockObject = new object();
+        private static object lockObject = new object();
         public String Value { get; set; }
         public CacheableAttribute(String value) {
             this.Value = value;
@@ -22,22 +21,20 @@ namespace ArnoAdminCore.Cache
 
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
-            var cacheKey = GenerateCacheKey(context);
-            if (cacheDict.ContainsKey(cacheKey))
-            {
-                context.ReturnValue = cacheDict[cacheKey];
-                return Task.CompletedTask;
-            }
-            var task = next(context);
-            var cacheValue = context.ReturnValue;
             lock(lockObject)
             {
-                if (!cacheDict.ContainsKey(cacheKey))
+                var cacheKey = GenerateCacheKey(context);
+                var cacheValue = CacheFactory.Cache.GetHashFieldCache<object>(this.Value, cacheKey);
+                if (cacheValue != null)
                 {
-                    cacheDict.Add(cacheKey, cacheValue);
+                    context.ReturnValue = cacheValue;
+                    return Task.CompletedTask;
                 }
+                var task = next(context);
+                cacheValue = context.ReturnValue;
+                CacheFactory.Cache.SetHashFieldCache<object>(this.Value, cacheKey, cacheValue);
+                return task;
             }
-            return task;
         }
 
         private string GenerateCacheKey(AspectContext context)

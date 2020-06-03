@@ -37,10 +37,10 @@ namespace ArnoAdminCore.SystemManage.Models.Poco
         public String Status { get; set; }
         public String LoginIp { get; set; }
         public DateTime? LoginDate { get; set; }
+        public String Token { get; set; }
         [Description("備注")]
         [Export]
         public String Remark { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
-
     }
 }

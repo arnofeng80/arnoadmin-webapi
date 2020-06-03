@@ -1,5 +1,6 @@
 ﻿using ArnoAdminCore.Utils;
 using ArnoAdminCore.Utils.Excel;
+using ArnoAdminCore.Web;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,11 @@ namespace ArnoAdminCore.Base.Models
         [Description("創建人")]
         [Export]
         public long Id { get; set; }
-        public long CreateBy { get; set; }
+        public string CreateBy { get; set; }
         [Description("創建時間")]
         [Export]
         public DateTime CreateTime { get; set; }
-        public long UpdateBy { get; set; }
+        public string UpdateBy { get; set; }
         public DateTime UpdateTime { get; set; }
         public int Deleted { get; set; }
 
@@ -26,8 +27,14 @@ namespace ArnoAdminCore.Base.Models
         {
             this.Id = IdGenerator.GetId();
             this.CreateTime = this.UpdateTime = DateTime.Now;
-            this.CreateBy = this.UpdateBy = 0;
+            this.CreateBy = this.UpdateBy = Current.Operator.LoginName;
             this.Deleted = 0;
+        }
+
+        public void Update()
+        {
+            this.UpdateTime = DateTime.Now;
+            this.UpdateBy = Current.Operator.LoginName;
         }
     }
 }

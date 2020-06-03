@@ -10,6 +10,7 @@ using System.Text;
 using System.Reflection;
 using System.Linq;
 using ArnoAdminCore.Utils;
+using ArnoAdminCore.Web;
 
 namespace ArnoAdminCore.Context
 {
@@ -41,17 +42,21 @@ namespace ArnoAdminCore.Context
         //    return base.Add(entity);
         //}
 
-        public override int SaveChanges()
-        {
-            ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity is BaseEntity).ToList().ForEach(e => {
-                var entry = (BaseEntity)e.Entity;
-                entry.Id = IdGenerator.GetId();
-                entry.CreateTime = entry.UpdateTime = DateTime.Now;
-                entry.CreateBy = entry.UpdateBy = 0;
-                entry.Deleted = 0;
-            });
+        //public override int SaveChanges()
+        //{
+            //ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity is BaseEntity).ToList().ForEach(e => {
+            //    var entry = (BaseEntity)e.Entity;
+            //    entry.Id = IdGenerator.GetId();
+            //    entry.CreateTime = entry.UpdateTime = DateTime.Now;
+            //    entry.CreateBy = entry.UpdateBy = Current.Operator.LoginName;
+            //    entry.Deleted = 0;
+            //});
 
-            ChangeTracker.Entries().Where(e => e.State == EntityState.Modified && e.Entity is BaseEntity).ToList().ForEach(e => ((BaseEntity)e.Entity).UpdateTime = DateTime.Now);
+            //ChangeTracker.Entries().Where(e => e.State == EntityState.Modified && e.Entity is BaseEntity).ToList().ForEach(e => {
+            //    var entry = (BaseEntity)e.Entity;
+            //    entry.UpdateTime = DateTime.Now;
+            //    entry.UpdateBy = Current.Operator.LoginName;
+            //});
 
             //ChangeTracker.Entries().Where(e => e.State == EntityState.Deleted && e.Entity is BaseEntity).ToList().ForEach(e => {
             //    var entry = (BaseEntity)e.Entity;
@@ -60,7 +65,7 @@ namespace ArnoAdminCore.Context
             //    entry.Deleted = 1;
             //    e.State = EntityState.Modified;
             //});
-            return base.SaveChanges();
-        }
+        //    return base.SaveChanges();
+        //}
     }
 }

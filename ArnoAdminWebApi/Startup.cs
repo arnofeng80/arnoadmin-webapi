@@ -57,7 +57,9 @@ namespace ArnoAdminWebApi
             //});
 
             services.AddDistributedMemoryCache();
+            services.AddMemoryCache();
             services.AddSession();
+            services.AddHttpContextAccessor();
             #endregion
 
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -85,6 +87,7 @@ namespace ArnoAdminWebApi
             services.AddScoped<IConfigService, ConfigService>();
 
             GlobalContext.SystemConfig = Configuration.GetSection("SystemConfig").Get<SystemConfig>();
+            GlobalContext.Services = services;
 
             services.AddDbContext<SystemDbContext>(options =>
                    options.UseSqlServer(GlobalContext.SystemConfig.DBConnectionString));
@@ -108,6 +111,8 @@ namespace ArnoAdminWebApi
             {
                 endpoints.MapControllers();
             });
+
+            GlobalContext.ServiceProvider = app.ApplicationServices;
         }
     }
 }

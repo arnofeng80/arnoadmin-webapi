@@ -6,7 +6,7 @@ using ArnoAdminCore.Auth;
 using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.List;
 using ArnoAdminCore.SystemManage.Models.Poco;
-using ArnoAdminCore.SystemManage.Repositories;
+using ArnoAdminCore.SystemManage.Services;
 using ArnoAdminCore.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -20,35 +20,36 @@ namespace ArnoAdminWebApi.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly UserRepository _userRepo;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly ILogger<LoginController> _logger;
 
-        public LoginController(ILogger<LoginController> logger, UserRepository userRepo, IMapper mapper)
+        public LoginController(ILogger<LoginController> logger, IUserService userService, IMapper mapper)
         {
             this._logger = logger;
-            this._userRepo = userRepo;
+            this._userService = userService;
             this._mapper = mapper;
         }
 
         [HttpPost("login")]
-        public async Task<Result> Login(LoginBody loginBody)
+        public Result Login(LoginBody loginBody)
         {
             if(String.IsNullOrWhiteSpace(loginBody.UserName) || String.IsNullOrWhiteSpace(loginBody.Password))
             {
                 return Result.Error("請輸入用戶名和密碼");
             }
-            var user = await _userRepo.DbContext.Set<User>().Where(x => x.LoginName == loginBody.UserName && x.Password == EncryptHelper.HMACMD5Encoding(loginBody.Password.Trim())).FirstOrDefaultAsync();
-            if (user == null)
+
+            User user = null;
+            try
             {
-                return Result.Error("用戶名或密碼錯誤");
-            } else
+                user = _userService.Login(loginBody.UserName.Trim(), EncryptHelper.HMACMD5Encoding(loginBody.Password.Trim()));
+            }
+            catch (Exception e)
             {
-                HttpContext.Session.SetString("User", "123456");
-                String aa = HttpContext.Session.Id;
+                return Result.Error(e.Message);
             }
 
-            return Result.Ok();
+            return Result.Ok(new { Token = user.Token });
         }
 
         [HttpPost("logout")]
@@ -61,21 +62,19 @@ namespace ArnoAdminWebApi.Controllers
         [HttpGet("getInfo")]
         public Result getInfo()
         {
-            var user = _userRepo.DbContext.Set<User>().Where(x => x.LoginName == "admin").FirstOrDefault();
-            var userRoles =_userRepo.DbContext.Set<UserRole>().Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToArray();
-            var userMenus = _userRepo.DbContext.Set<RoleMenu>().Where(x => userRoles.Contains(x.RoleId)).Select(x => x.MenuId).ToArray();
+            var user = _userService.Repository.DbContext.Set<User>().Where(x => x.LoginName == "admin").FirstOrDefault();
+            var userRoles = _userService.Repository.DbContext.Set<UserRole>().Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToArray();
+            var userMenus = _userService.Repository.DbContext.Set<RoleMenu>().Where(x => userRoles.Contains(x.RoleId)).Select(x => x.MenuId).ToArray();
             return Result.Ok(new { user = user, roles = userRoles, permissions = userMenus });
         }
 
         [HttpGet("getRouters")]
         public Result getRouters()
         {
-            var user = _userRepo.DbContext.Set<User>().Where(x => x.LoginName == "admin").FirstOrDefault();
-            var userRoles = _userRepo.DbContext.Set<UserRole>().Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToArray();
-            var userMenus = _userRepo.DbContext.Set<RoleMenu>().Where(x => userRoles.Contains(x.RoleId)).Select(x => x.MenuId).ToArray();
-
-
-            var menuList = _mapper.Map<IEnumerable<MenuList>>(_userRepo.DbContext.Set<Menu>().Where(x => userMenus.Contains(x.Id)));
+            var user = _userService.Repository.DbContext.Set<User>().Where(x => x.LoginName == "admin").FirstOrDefault();
+            var userRoles = _userService.Repository.DbContext.Set<UserRole>().Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToArray();
+            var userMenus = _userService.Repository.DbContext.Set<RoleMenu>().Where(x => userRoles.Contains(x.RoleId)).Select(x => x.MenuId).ToArray();
+            var menuList = _mapper.Map<IEnumerable<MenuList>>(_userService.Repository.DbContext.Set<Menu>().Where(x => userMenus.Contains(x.Id)));
             var rootList = menuList.Where(x => x.ParentId == 0);
             TreeUtil.BuildTree<MenuList>(menuList, rootList);
             return Result.Ok(rootList);

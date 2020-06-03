@@ -16,6 +16,32 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
         {
 
         }
+
+        [CacheEvict("dict")]
+        public override Dict Add(Dict entity)
+        {
+            return base.Add(entity);
+        }
+        [CacheEvict("dict")]
+        public override Dict Update(Dict entity)
+        {
+            return base.Update(entity);
+        }
+        [CacheEvict("dict")]
+        public override Dict UpdatePartial(Dict entity)
+        {
+            return base.UpdatePartial(entity);
+        }
+        [CacheEvict("dict")]
+        public override void Delete(Dict entity)
+        {
+            base.Delete(entity);
+        }
+        [CacheEvict("dict")]
+        public override void Delete(long id)
+        {
+            base.Delete(id);
+        }
         [Cacheable("dict")]
         public virtual IEnumerable<Dict> FindByCode(String dictCode)
         {

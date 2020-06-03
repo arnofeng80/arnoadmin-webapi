@@ -39,6 +39,13 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost("list")]
         public Result list(DictSearch search)
         {
+            Console.WriteLine("begin");
+            for (int i = 0; i < 10; i++)
+            {
+                _dictService.FindByCode("sys_available");
+                _dictService.FindByCode("sys_yes_no");
+            }
+            Console.WriteLine("end");
             PageList<Dict> list = _dictService.FindPage(search);
             return Result.Ok(list);
         }

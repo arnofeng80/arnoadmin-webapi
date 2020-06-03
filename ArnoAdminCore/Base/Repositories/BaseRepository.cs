@@ -90,7 +90,11 @@ namespace ArnoAdminCore.Base.Repositories
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-
+            BaseEntity baseEntity = entity as BaseEntity;
+            if (baseEntity != null)
+            {
+                baseEntity.Create();
+            }
             _context.Set<TEntity>().Add(entity);
             return entity;
         }
@@ -100,7 +104,11 @@ namespace ArnoAdminCore.Base.Repositories
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-
+            BaseEntity baseEntity = entity as BaseEntity;
+            if (baseEntity != null)
+            {
+                baseEntity.Update();
+            }
             _context.Set<TEntity>().Update(entity);
             return entity;
         }
