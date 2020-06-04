@@ -19,7 +19,6 @@ namespace ArnoAdminWebApi.Controllers
 {
     [Route("/sys/user")]
     [ApiController]
-    [AuthFilter]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

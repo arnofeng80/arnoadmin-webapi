@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ArnoAdminCore.Auth;
 using ArnoAdminCore.Base;
 using ArnoAdminCore.Base.Repositories;
 using ArnoAdminCore.Cache;
@@ -62,7 +63,12 @@ namespace ArnoAdminWebApi
             services.AddHttpContextAccessor();
             #endregion
 
-            services.AddControllers().AddNewtonsoftJson(options =>
+            services.AddControllers(
+                options =>
+                {
+                    options.Filters.Add(typeof(AuthFilterAttribute));
+                }
+                ).AddNewtonsoftJson(options =>
             {
                 //options.Filters.Add<XXXActionFilter>();
                 options.SerializerSettings.Converters.Add(new LongJsonConverter());
