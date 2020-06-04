@@ -67,8 +67,7 @@ namespace ArnoAdminWebApi
                 options =>
                 {
                     options.Filters.Add(typeof(AuthFilterAttribute));
-                }
-                ).AddNewtonsoftJson(options =>
+                }).AddNewtonsoftJson(options =>
             {
                 //options.Filters.Add<XXXActionFilter>();
                 options.SerializerSettings.Converters.Add(new LongJsonConverter());
