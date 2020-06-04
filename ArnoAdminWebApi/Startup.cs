@@ -64,6 +64,7 @@ namespace ArnoAdminWebApi
 
             services.AddControllers().AddNewtonsoftJson(options =>
             {
+                //options.Filters.Add<XXXActionFilter>();
                 options.SerializerSettings.Converters.Add(new LongJsonConverter());
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -71,6 +72,7 @@ namespace ArnoAdminWebApi
                 //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
+            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddScoped<DepartmentRepository>();

@@ -1,4 +1,5 @@
-﻿using ArnoAdminCore.Base.Models;
+﻿using ArnoAdminCore.Auth;
+using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Services;
@@ -18,6 +19,7 @@ namespace ArnoAdminWebApi.Controllers
 {
     [Route("/sys/user")]
     [ApiController]
+    [AuthFilter]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -34,6 +36,7 @@ namespace ArnoAdminWebApi.Controllers
             return Result.Ok(list);
         }
 
+        [AuthFilter]
         [HttpGet("all")]
         public Result All()
         {
