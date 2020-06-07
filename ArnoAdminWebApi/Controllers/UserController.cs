@@ -19,6 +19,7 @@ namespace ArnoAdminWebApi.Controllers
 {
     [Route("/sys/user")]
     [ApiController]
+    [AuthFilter]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -35,7 +36,7 @@ namespace ArnoAdminWebApi.Controllers
             return Result.Ok(list);
         }
 
-        [AuthFilter]
+        //[AuthFilter]
         [HttpGet("all")]
         public Result All()
         {

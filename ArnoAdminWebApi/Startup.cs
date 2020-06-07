@@ -63,13 +63,8 @@ namespace ArnoAdminWebApi
             services.AddHttpContextAccessor();
             #endregion
 
-            services.AddControllers(
-                options =>
-                {
-                    options.Filters.Add(typeof(AuthFilterAttribute));
-                }).AddNewtonsoftJson(options =>
+            services.AddControllers().AddNewtonsoftJson(options =>
             {
-                //options.Filters.Add<XXXActionFilter>();
                 options.SerializerSettings.Converters.Add(new LongJsonConverter());
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

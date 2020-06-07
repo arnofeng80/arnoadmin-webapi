@@ -56,5 +56,17 @@ namespace ArnoAdminCore.Base.Models
         {
             return new Result(HttpStatusCode.InternalServerError, msg, data);
         }
+        public static Result Unauthorized()
+        {
+            return Result.Unauthorized("Unauthorized");
+        }
+        public static Result Unauthorized(String msg)
+        {
+            return Result.Unauthorized(msg, null);
+        }
+        public static Result Unauthorized(String msg, Object data)
+        {
+            return new Result(HttpStatusCode.Unauthorized, msg, data);
+        }
     }
 }

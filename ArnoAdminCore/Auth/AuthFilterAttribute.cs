@@ -1,11 +1,13 @@
 ﻿using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.Web;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Reflection;
 
 namespace ArnoAdminCore.Auth
 {
@@ -20,23 +22,25 @@ namespace ArnoAdminCore.Auth
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            base.OnActionExecuting(context);
-            //if (context.ActionDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any())
-            //{
-            //    return;
-            //}
-            //Operator op = Current.Operator;
-            //if (op == null)
-            //{
-            //    actionContext.Response = actionContext.Request.CreateErrorResponse(System.Net.HttpStatusCode.Unauthorized, "Unauthorized");
-            //}
-            //else
-            //{
-            //    if (!String.IsNullOrEmpty(Permission))
-            //    {
+            var action = context.ActionDescriptor as ControllerActionDescriptor;
 
-            //    }
-            //}
+            if (action.MethodInfo.GetCustomAttributes<AllowAnonymousAttribute>().Any())
+            {
+                return;
+            }
+
+            Operator op = Current.Operator;
+            if (op == null)
+            {
+                context.Result = new JsonResult(Result.Unauthorized());
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(Permission))
+                {
+
+                }
+            }
         }
     }
 }
