@@ -112,6 +112,19 @@ namespace ArnoAdminCore.Base.Repositories
             _context.Set<TEntity>().Update(entity);
             return entity;
         }
+        public TEntity UpdatePartial(TEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            BaseEntity baseEntity = entity as BaseEntity;
+            if (baseEntity != null)
+            {
+                baseEntity.Update();
+            }
+            return entity;
+        }
         public void Delete(TEntity entity)
         {
             if (entity == null)

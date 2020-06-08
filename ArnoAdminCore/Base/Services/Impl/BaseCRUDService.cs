@@ -59,6 +59,7 @@ namespace ArnoAdminCore.Base.Services.Impl
         }
         public virtual TEntity UpdatePartial(TEntity entity)
         {
+            var e = _repo.UpdatePartial(entity);
             _repo.Save();
             return entity;
         }

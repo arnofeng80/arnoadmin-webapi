@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using ArnoAdminCore.Auth;
 using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.List;
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
-using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.SystemManage.Services;
 using ArnoAdminCore.Utils;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -18,6 +16,7 @@ namespace ArnoAdminWebApi.Controllers
 {
     [Route("sys/menu")]
     [ApiController]
+    [AuthFilter]
     public class MenuController : ControllerBase
     {
         private readonly IMenuService _menuService;

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
+using ArnoAdminCore.Auth;
 using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
-using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.SystemManage.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +12,7 @@ namespace ArnoAdminWebApi.Controllers
 {
     [Route("sys/config")]
     [ApiController]
+    [AuthFilter]
     public class SysConfigController : ControllerBase
     {
         private readonly IConfigService _configService;

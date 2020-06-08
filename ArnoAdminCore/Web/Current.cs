@@ -31,15 +31,35 @@ namespace ArnoAdminCore.Web
                 {
                     IMapper _mapper = GlobalContext.ServiceProvider.GetService<IMapper>();
                     IUserService _userService = GlobalContext.ServiceProvider.GetService<IUserService>();
-                    var user = _userService.FindUserByToken(token);
+                    var user = _userService.FindByToken(token);
                     op = _mapper.Map<Operator>(user);
+                    op.Roles = _userService.FindRolesByUserId(user.Id);
+                    op.Menus = _userService.FindMenusByUserId(user.Id);
+
                     if (op != null)
                     {
                         CacheFactory.Cache.SetCache(token, op);
                     }
                 }
-
                 return op;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    var token = Session.GetString(WebConst.TOKEN_NAME);
+                    if (token != null)
+                    {
+                        if (value == null)
+                        {
+                            CacheFactory.Cache.RemoveCache(token);
+                        }
+                        else
+                        {
+                            CacheFactory.Cache.SetCache(token, value);
+                        }
+                    }
+                }
             }
         }
 

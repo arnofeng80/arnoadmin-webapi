@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using ArnoAdminCore.Auth;
 using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
 using ArnoAdminCore.SystemManage.Models.Poco;
-using ArnoAdminCore.SystemManage.Repositories;
 using ArnoAdminCore.SystemManage.Services;
-using ArnoAdminCore.SystemManage.Services.Impl;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.Extensions.Logging;
 
 namespace ArnoAdminWebApi.Controllers
 {
     [Route("sys/dict")]
     [ApiController]
+    [AuthFilter]
     public class DictController : ControllerBase
     {
         private readonly IDictService _dictService;
@@ -39,13 +36,6 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost("list")]
         public Result list(DictSearch search)
         {
-            Console.WriteLine("begin");
-            for (int i = 0; i < 10; i++)
-            {
-                _dictService.FindByCode("sys_available");
-                _dictService.FindByCode("sys_yes_no");
-            }
-            Console.WriteLine("end");
             PageList<Dict> list = _dictService.FindPage(search);
             return Result.Ok(list);
         }

@@ -36,7 +36,6 @@ namespace ArnoAdminWebApi.Controllers
             return Result.Ok(list);
         }
 
-        //[AuthFilter]
         [HttpGet("all")]
         public Result All()
         {
@@ -115,10 +114,22 @@ namespace ArnoAdminWebApi.Controllers
             return Result.Ok();
         }
 
-        [HttpGet("dept/{userId}")]
-        public async Task<Result> FindRoleByUserId(long userId)
+        //[HttpGet("dept/{userId}")]
+        //public async Task<Result> FindRoleByUserId(long userId)
+        //{
+        //    return Result.Ok(await _userService.FindRoleByUserIdAsync(userId));
+        //}
+
+        [HttpGet("findMenuTree")]
+        public Result FindRouters()
         {
-            return Result.Ok(await _userService.FindRoleByUserIdAsync(userId));
+            return Result.Ok(_userService.FindMenuTreeByUserId(Current.Operator.Id));
+        }
+
+        [HttpGet("getRolesAndPermissions")]
+        public Result getInfo()
+        {
+            return Result.Ok(Current.Operator);
         }
 
         [HttpPost("importData")]
@@ -144,7 +155,6 @@ namespace ArnoAdminWebApi.Controllers
                     u.Password = EncryptHelper.PasswordEncoding(u.Password.Trim());
                 }
             }
-
             return Result.Ok();
         }
 
@@ -156,5 +166,6 @@ namespace ArnoAdminWebApi.Controllers
             var actionresult = new FileStreamResult(excel.CreateExportMemoryStream(list.ToList(), "", null), "application/vnd.ms-excel");
             return actionresult;
         }
+
     }
 }

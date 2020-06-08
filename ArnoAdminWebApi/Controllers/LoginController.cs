@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ArnoAdminCore.Auth;
 using ArnoAdminCore.Base.Models;
-using ArnoAdminCore.SystemManage.Models.Dto.List;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Services;
 using ArnoAdminCore.Utils;
@@ -55,29 +52,8 @@ namespace ArnoAdminWebApi.Controllers
         [HttpPost("logout")]
         public Result Logout()
         {
-            String aa = HttpContext.Session.GetString("code");
+            _userService.Logout();
             return Result.Ok();
-        }
-
-        [HttpGet("getInfo")]
-        public Result getInfo()
-        {
-            var user = _userService.Repository.DbContext.Set<User>().Where(x => x.LoginName == "admin").FirstOrDefault();
-            var userRoles = _userService.Repository.DbContext.Set<UserRole>().Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToArray();
-            var userMenus = _userService.Repository.DbContext.Set<RoleMenu>().Where(x => userRoles.Contains(x.RoleId)).Select(x => x.MenuId).ToArray();
-            return Result.Ok(new { user = user, roles = userRoles, permissions = userMenus });
-        }
-
-        [HttpGet("getRouters")]
-        public Result getRouters()
-        {
-            var user = _userService.Repository.DbContext.Set<User>().Where(x => x.LoginName == "admin").FirstOrDefault();
-            var userRoles = _userService.Repository.DbContext.Set<UserRole>().Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToArray();
-            var userMenus = _userService.Repository.DbContext.Set<RoleMenu>().Where(x => userRoles.Contains(x.RoleId)).Select(x => x.MenuId).ToArray();
-            var menuList = _mapper.Map<IEnumerable<MenuList>>(_userService.Repository.DbContext.Set<Menu>().Where(x => userMenus.Contains(x.Id)));
-            var rootList = menuList.Where(x => x.ParentId == 0);
-            TreeUtil.BuildTree<MenuList>(menuList, rootList);
-            return Result.Ok(rootList);
         }
     }
 }

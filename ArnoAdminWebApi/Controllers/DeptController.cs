@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArnoAdminCore.Auth;
 using ArnoAdminCore.Base.Models;
 using ArnoAdminCore.SystemManage.Models.Dto.List;
 using ArnoAdminCore.SystemManage.Models.Dto.Search;
@@ -15,6 +16,7 @@ namespace ArnoAdminWebApi.Controllers
 {
     [Route("/sys/dept")]
     [ApiController]
+    [AuthFilter]
     public class DeptController : ControllerBase
     {
         private readonly IDepartmentService _deptService;

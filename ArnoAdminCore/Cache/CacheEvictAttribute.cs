@@ -8,8 +8,8 @@ namespace ArnoAdminCore.Cache
 {
     public class CacheEvictAttribute : AbstractInterceptorAttribute
     {
-        public String Value { get; set; }
-        public CacheEvictAttribute(String value)
+        public String[] Value { get; set; }
+        public CacheEvictAttribute(params String[] value)
         {
             this.Value = value;
         }
@@ -17,7 +17,10 @@ namespace ArnoAdminCore.Cache
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
             var task = next(context);
-            CacheFactory.Cache.RemoveHashFieldCache(this.Value);
+            foreach(string key in this.Value)
+            {
+                CacheFactory.Cache.RemoveHashFieldCache(key);
+            }
             return task;
         }
     }

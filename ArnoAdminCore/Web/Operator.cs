@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArnoAdminCore.SystemManage.Models.Poco;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,5 +17,9 @@ namespace ArnoAdminCore.Web
         public String InternalPhone { get; set; }
         public String Mobile { get; set; }
         public String Gender { get; set; }
+
+        public List<Menu> Menus { get; set; }
+        public List<Role> Roles { get; set; }
+
     }
 }
