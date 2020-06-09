@@ -18,8 +18,8 @@ namespace ArnoAdminCore.Web
         public String Mobile { get; set; }
         public String Gender { get; set; }
 
-        public List<Menu> Menus { get; set; }
-        public List<Role> Roles { get; set; }
+        public List<String> Roles { get; set; }
+        public List<String> Permissions { get; set; }
 
     }
 }

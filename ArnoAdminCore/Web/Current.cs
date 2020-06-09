@@ -12,6 +12,7 @@ using ArnoAdminCore.Base.Constants;
 using ArnoAdminCore.Cache;
 using ArnoAdminCore.SystemManage.Services;
 using AutoMapper;
+using System.Linq;
 
 namespace ArnoAdminCore.Web
 {
@@ -33,8 +34,8 @@ namespace ArnoAdminCore.Web
                     IUserService _userService = GlobalContext.ServiceProvider.GetService<IUserService>();
                     var user = _userService.FindByToken(token);
                     op = _mapper.Map<Operator>(user);
-                    op.Roles = _userService.FindRolesByUserId(user.Id);
-                    op.Menus = _userService.FindMenusByUserId(user.Id);
+                    op.Roles = _userService.FindRolesByUserId(user.Id).Select(p => p.RoleCode).ToList();
+                    op.Permissions = _userService.FindMenusByUserId(user.Id).Where(p => p.MenuType != MenuConst.MENU_TYPE_FOLDER).Select(p => p.Perms).ToList();
 
                     if (op != null)
                     {

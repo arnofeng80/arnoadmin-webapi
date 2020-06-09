@@ -114,11 +114,11 @@ namespace ArnoAdminWebApi.Controllers
             return Result.Ok();
         }
 
-        //[HttpGet("dept/{userId}")]
-        //public async Task<Result> FindRoleByUserId(long userId)
-        //{
-        //    return Result.Ok(await _userService.FindRoleByUserIdAsync(userId));
-        //}
+        [HttpGet("roles/{userId}")]
+        public Result FindRoleByUserId(long userId)
+        {
+            return Result.Ok(_userService.FindRolesByUserId(userId));
+        }
 
         [HttpGet("findMenuTree")]
         public Result FindRouters()

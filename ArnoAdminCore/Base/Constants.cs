@@ -95,4 +95,11 @@ namespace ArnoAdminCore.Base.Constants
     {
         public const String TOKEN_NAME = "x-web-user-token";
     }
+
+    public class MenuConst
+    {
+        public const String MENU_TYPE_FOLDER = "M";
+        public const String MENU_TYPE_MENU = "C";
+        public const String MENU_TYPE_BUTTON = "F";
+    }
 }

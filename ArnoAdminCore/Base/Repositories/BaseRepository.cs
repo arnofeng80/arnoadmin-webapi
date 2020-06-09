@@ -64,10 +64,10 @@ namespace ArnoAdminCore.Base.Repositories
 
             return query;
         }
-        public IEnumerable<TEntity> FindAll(BaseSearch pageSearch)
+        public IEnumerable<TEntity> FindAll(BaseSearch baseSearch)
         {
             int totalCount;
-            return GetQueryExpression(pageSearch, out totalCount).ToList();
+            return GetQueryExpression(baseSearch, out totalCount).ToList();
         }
         public PageList<TEntity> FindAll(BasePageSearch pageSearcher)
         {

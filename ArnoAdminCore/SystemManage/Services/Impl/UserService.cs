@@ -138,7 +138,7 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
         {
             var userRoles = Repository.DbContext.Set<UserRole>().Where(x => x.UserId == userId).Select(x => x.RoleId).ToArray();
             var userMenus = Repository.DbContext.Set<RoleMenu>().Where(x => userRoles.Contains(x.RoleId)).Select(x => x.MenuId).ToArray();
-            var menuList = _mapper.Map<IEnumerable<MenuList>>(Repository.DbContext.Set<Menu>().Where(x => userMenus.Contains(x.Id)));
+            var menuList = _mapper.Map<IEnumerable<MenuList>>(Repository.DbContext.Set<Menu>().Where(x => x.MenuType != MenuConst.MENU_TYPE_BUTTON && userMenus.Contains(x.Id)));
             var rootList = menuList.Where(x => x.ParentId == 0);
             TreeUtil.BuildTree<MenuList>(menuList, rootList);
             return rootList;
