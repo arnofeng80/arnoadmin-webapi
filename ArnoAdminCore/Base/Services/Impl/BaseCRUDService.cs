@@ -73,6 +73,16 @@ namespace ArnoAdminCore.Base.Services.Impl
             _repo.Delete(id);
             _repo.Save();
         }
+        public virtual void DeleteRange(params TEntity[] entities)
+        {
+            _repo.DeleteRange(entities);
+            _repo.Save();
+        }
+        public virtual void DeleteRange(params long[] ids)
+        {
+            _repo.DeleteRange(ids);
+            _repo.Save();
+        }
         public virtual bool Exists(TEntity entity)
         {
             return _repo.Exists(entity);

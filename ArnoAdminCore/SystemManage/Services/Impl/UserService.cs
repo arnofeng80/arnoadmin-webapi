@@ -64,17 +64,17 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
 
         public User FindByLoginName(string loginName)
         {
-            return Repository.DbContext.Set<User>().Where(x => x.LoginName == loginName).FirstOrDefault();
+            return Repository.DbContext.Set<User>().FirstOrDefault(x => x.LoginName == loginName);
         }
 
         public User FindByLoginName(string loginName, string password)
         {
-            return Repository.DbContext.Set<User>().Where(x => x.LoginName == loginName && x.Password == password).FirstOrDefault();
+            return Repository.DbContext.Set<User>().FirstOrDefault(x => x.LoginName == loginName && x.Password == password);
         }
 
         public User FindByToken(string token)
         {
-            return Repository.DbContext.Set<User>().Where(x => x.Token == token).FirstOrDefault();
+            return Repository.DbContext.Set<User>().FirstOrDefault(x => x.Token == token);
         }
 
         public User Login(string userName, string password)

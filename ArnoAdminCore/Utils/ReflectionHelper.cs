@@ -36,7 +36,7 @@ namespace ArnoAdminCore.Utils
                 var columnPropertyList = new List<PropertyInfo>();
                 foreach (var column in columns)
                 {
-                    var columnProperty = properties.Where(p => p.Name == column).FirstOrDefault();
+                    var columnProperty = properties.FirstOrDefault(p => p.Name == column);
                     if (columnProperty != null)
                     {
                         columnPropertyList.Add(columnProperty);
