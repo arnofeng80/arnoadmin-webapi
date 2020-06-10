@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArnoAdminCore.Auth;
 using ArnoAdminCore.Base;
+using ArnoAdminCore.Base.Exception;
 using ArnoAdminCore.Base.Repositories;
 using ArnoAdminCore.Cache;
 using ArnoAdminCore.Context;
@@ -64,7 +65,10 @@ namespace ArnoAdminWebApi
             services.AddHttpContextAccessor();
             #endregion
 
-            services.AddControllers().AddNewtonsoftJson(options =>
+            services.AddControllers(options => {
+                options.Filters.Add<GlobalExceptionFilter>();
+            })
+                .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.Converters.Add(new LongJsonConverter());
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss"; //設置時間格式

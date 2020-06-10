@@ -1,4 +1,5 @@
 ﻿using ArnoAdminCore.Base.Constants;
+using ArnoAdminCore.Base.Exception;
 using ArnoAdminCore.Base.Services.Impl;
 using ArnoAdminCore.Cache;
 using ArnoAdminCore.SystemManage.Models.Dto.List;
@@ -81,18 +82,18 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
         {
             if(String.IsNullOrWhiteSpace(userName) || String.IsNullOrWhiteSpace(password))
             {
-                throw new ArgumentNullException("用戶名或密碼不能為空");
+                throw new MessageException("用戶名或密碼不能為空");
             }
 
             User user = FindByLoginName(userName.Trim(), password.Trim());
             if(user == null)
             {
-                throw new ArgumentException("用戶名或密碼錯誤");
+                throw new MessageException("用戶名或密碼錯誤");
             }
 
             if(user.Status == DictConst.NORMAL_DISABLE)
             {
-                throw new ArgumentException("用戶已停用");
+                throw new MessageException("用戶已停用");
             }
 
             var prevToken = user.Token;
