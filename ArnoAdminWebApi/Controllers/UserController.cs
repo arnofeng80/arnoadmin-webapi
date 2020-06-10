@@ -62,6 +62,7 @@ namespace ArnoAdminWebApi.Controllers
         }
 
         [HttpPut]
+        [AuthFilter("sys:user:edit")]
         public Result Update(User entity)
         {
             foreach (UserRole ur in entity.UserRoles)

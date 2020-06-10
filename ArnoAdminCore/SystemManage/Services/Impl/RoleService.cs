@@ -3,6 +3,7 @@ using ArnoAdminCore.Base.Repositories;
 using ArnoAdminCore.Base.Services.Impl;
 using ArnoAdminCore.SystemManage.Models.Poco;
 using ArnoAdminCore.SystemManage.Repositories;
+using ArnoAdminCore.Transaction;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -28,22 +29,20 @@ namespace ArnoAdminCore.SystemManage.Services.Impl
         {
             return base.Add(entity);
         }
+        [Transactional]
         public Role UpdateWithMenu(Role entity)
         {
-            using (var tran = this.Repository.BeginTransaction())
+            this.Repository.DbContext.Set<RoleMenu>().RemoveRange(this.Repository.DbContext.Set<RoleMenu>().Where(x => x.RoleId == entity.Id));
+            this.Repository.Save();
+            foreach (var roleMenu in entity.RoleMenus)
             {
-                this.Repository.DbContext.Set<RoleMenu>().RemoveRange(this.Repository.DbContext.Set<RoleMenu>().Where(x => x.RoleId == entity.Id));
-                this.Repository.Save();
-                foreach (var roleMenu in entity.RoleMenus)
-                {
-                    roleMenu.RoleId = entity.Id;
-                    this.Repository.DbContext.Set<RoleMenu>().Add(roleMenu);
-                }
-
-                base.Update(entity);
-                Repository.Save();
-                tran.Commit();
+                roleMenu.RoleId = entity.Id;
+                this.Repository.DbContext.Set<RoleMenu>().Add(roleMenu);
             }
+
+            base.Update(entity);
+            Repository.Save();
+
             return entity;
         }
         public Role UpdateWithDept(Role entity)

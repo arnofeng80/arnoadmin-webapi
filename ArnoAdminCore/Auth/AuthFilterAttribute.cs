@@ -36,9 +36,9 @@ namespace ArnoAdminCore.Auth
             }
             else
             {
-                if (!String.IsNullOrEmpty(Permission))
+                if (!String.IsNullOrEmpty(Permission) && !op.Permissions.Contains(Permission))
                 {
-
+                    context.Result = new JsonResult(Result.Error("權限不足"));
                 }
             }
         }
