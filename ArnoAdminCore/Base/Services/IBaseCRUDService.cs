@@ -22,6 +22,8 @@ namespace ArnoAdminCore.Base.Services
         public TEntity UpdatePartial(TEntity entity);
         public void Delete(TEntity entity);
         public void Delete(long id);
+        public void DeleteRange(params TEntity[] entity);
+        public void DeleteRange(params long[] id);
         public bool Exists(TEntity entity);
         public bool Exists(long id);
         public bool Save();

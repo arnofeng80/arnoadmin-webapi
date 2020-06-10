@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,21 +41,22 @@ namespace ArnoAdminWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            #region Session囀湔遣湔
+            #region Session
             //services.Configure<CookiePolicyOptions>(options =>
             //{
             //    options.CheckConsentNeeded = context => true;
             //    options.MinimumSameSitePolicy = SameSiteMode.None;
             //});
-            ////蚚囀湔遣湔(蜆祭紬剒婓AddSession()覃蚚妏蚚)
-            //services.AddDistributedMemoryCache();//蚚session眳斛剕珂氝樓囀湔
+            // 啟用分布式緩存(該步驟需在AddSession()調用前使用)
+            //services.AddDistributedMemoryCache();//啟用session之前必須先添加分布式緩存
 
             //services.AddSession(options =>
             //{
             //    options.Cookie.Name = ".AdventureWorks.Session";
-            //    options.IdleTimeout = TimeSpan.FromSeconds(1800);//扢离session腔徹奀潔
-            //    options.Cookie.HttpOnly = true;//扢离婓銡擬祥夔籵徹js鳳腕蜆cookie腔硉
+            //    options.IdleTimeout = TimeSpan.FromSeconds(1800);//設置session的過期時間
+            //    options.Cookie.HttpOnly = true;//設置在瀏覽器不能通過js獲得該cookie的值
             //});
+
 
             services.AddDistributedMemoryCache();
             services.AddMemoryCache();
@@ -66,11 +67,11 @@ namespace ArnoAdminWebApi
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.Converters.Add(new LongJsonConverter());
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                //options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss"; //設置時間格式
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; //忽略迴圈引用
+                //options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver(); //數據格式首字母小寫
+                //options.SerializerSettings.ContractResolver = new DefaultContractResolver(); //數據格式按原樣輸出
+                //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore; //忽略空值
             });
             
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

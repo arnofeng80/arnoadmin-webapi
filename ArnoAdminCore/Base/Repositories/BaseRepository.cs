@@ -78,7 +78,7 @@ namespace ArnoAdminCore.Base.Repositories
         }
         public TEntity FindById(long id)
         {
-            return _context.Set<TEntity>().Where(x => x.Id == id && x.Deleted == 0).FirstOrDefault();
+            return _context.Set<TEntity>().FirstOrDefault(x => x.Id == id && x.Deleted == 0);
         }
         public IEnumerable<TEntity> FindByIds(IEnumerable<long> ids)
         {
@@ -139,17 +139,23 @@ namespace ArnoAdminCore.Base.Repositories
             var entity = FindById(id);
             Delete(entity);
         }
-        public void Delete(IEnumerable<TEntity> entities)
+        public void DeleteRange(params TEntity[] entities)
         {
-            foreach (var entity in entities)
+            if (entities == null)
             {
-                Delete(entity);
+                throw new ArgumentNullException(nameof(entities));
             }
+
+            _context.Set<TEntity>().RemoveRange(entities);
         }
-        public void Delete(Expression<Func<TEntity, bool>> condition) 
+        public void DeleteRange(params long[] ids)
         {
-            IEnumerable<TEntity> entities = _context.Set<TEntity>().Where(condition);
-            Delete(entities);
+            if (ids == null)
+            {
+                throw new ArgumentNullException(nameof(ids));
+            }
+
+            _context.Set<TEntity>().RemoveRange(_context.Set<TEntity>().Where(x => ids.Contains(x.Id)));
         }
         public bool Exists(TEntity entity)
         {

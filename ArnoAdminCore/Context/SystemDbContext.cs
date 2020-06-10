@@ -16,12 +16,14 @@ namespace ArnoAdminCore.Context
 {
     public class SystemDbContext : DbContext
     {
-        public static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+        public static readonly ILoggerFactory ConsoleLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+        //public static readonly ILoggerFactory ConsoleLoggerFactory = LoggerFactory.Create(builder => {
+        //    builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information).AddConsole();
+        //});
         public SystemDbContext(DbContextOptions<SystemDbContext> options) : base(options)
         {
 
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -30,7 +32,8 @@ namespace ArnoAdminCore.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
-                .UseLoggerFactory(MyLoggerFactory);
+                .EnableSensitiveDataLogging()
+                .UseLoggerFactory(ConsoleLoggerFactory);
 
         //public override EntityEntry<TEntity> Add<TEntity>(TEntity entity)
         //{
