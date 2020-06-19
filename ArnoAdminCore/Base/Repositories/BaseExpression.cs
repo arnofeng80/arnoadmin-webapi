@@ -10,12 +10,12 @@ namespace ArnoAdminCore.Base.Repositories
 {
     public class BaseExpression<TEntity>
     {
+        protected static readonly ParameterExpression parameter = Expression.Parameter(typeof(TEntity), "p");
         protected static readonly MethodInfo containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
         protected static readonly MethodInfo startsWithMethod = typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) });
         protected static readonly MethodInfo endsWithMethod = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) });
         protected Expression<Func<TEntity, bool>> CreateExpression(Object searcher)
         {
-            ParameterExpression parameter = Expression.Parameter(typeof(TEntity), "p");
             PropertyInfo[] props = searcher.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
             Expression query = null;
             foreach (PropertyInfo prop in props)
@@ -23,7 +23,7 @@ namespace ArnoAdminCore.Base.Repositories
                 object val = prop.GetValue(searcher);
                 if (val != null)
                 {
-                    Expression exp = GetExpression(searcher, parameter, prop);
+                    Expression exp = GetExpression(searcher, prop);
                     if (exp != null)
                     {
                         query = query == null ? exp : Expression.And(query, exp);
@@ -33,7 +33,7 @@ namespace ArnoAdminCore.Base.Repositories
             return query == null ? null : Expression.Lambda<Func<TEntity, bool>>(query, parameter);
         }
 
-        protected virtual Expression GetExpression(object searcher, ParameterExpression parameter, PropertyInfo prop)
+        protected virtual Expression GetExpression(object searcher, PropertyInfo prop)
         {
             object val = prop.GetValue(searcher);
 
@@ -59,6 +59,11 @@ namespace ArnoAdminCore.Base.Repositories
                 return Expression.Equal(memberExp, constantVal);
             }
             return null;
+        }
+
+        protected virtual Expression<Func<TEntity, bool>> CreateDeleteExpression()
+        { 
+            return Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(Expression.PropertyOrField(parameter, "Deleted"), Expression.Constant(0)), parameter);
         }
 
         public IOrderedQueryable<TEntity> OrderBy(IQueryable<TEntity> source, string property)

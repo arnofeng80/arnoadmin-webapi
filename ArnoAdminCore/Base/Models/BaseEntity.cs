@@ -10,7 +10,7 @@ using System.Text;
 
 namespace ArnoAdminCore.Base.Models
 {
-    public class BaseEntity
+    public class BaseEntity : IId, ICreate, IUpdate, IDelete
     {
         [Description("創建人")]
         [Export]

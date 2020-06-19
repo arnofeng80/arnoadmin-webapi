@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace ArnoAdminCore.Base.Repositories
 {
-    public class BaseRepository<TEntity> : BaseExpression<TEntity> where TEntity : BaseEntity
+    public class BaseRepository<TEntity> : BaseExpression<TEntity> where TEntity : class, IId
     {
         protected DbContext _context;
         public DbContext DbContext { get => this._context; }
@@ -23,7 +23,8 @@ namespace ArnoAdminCore.Base.Repositories
         }
         public IEnumerable<TEntity> FindAll()
         {
-            return _context.Set<TEntity>().Where(x => x.Deleted == 0).OrderByDescending(x => x.Id).ToList();
+            var query = GetQuery();
+            return query.OrderByDescending(x => x.Id).ToList();
         }
         private IQueryable<TEntity> GetQueryExpression(BaseSearch searcher, out int totalCount)
         {
@@ -31,10 +32,10 @@ namespace ArnoAdminCore.Base.Repositories
             {
                 throw new ArgumentNullException(nameof(searcher));
             }
-            var exp = CreateExpression(searcher);
 
-            var query = _context.Set<TEntity>().Where(x => x.Deleted == 0);
-            if(exp != null)
+            var query = GetQuery();
+            var exp = CreateExpression(searcher);
+            if (exp != null)
             {
                 query = query.Where(exp);
             }
@@ -78,11 +79,11 @@ namespace ArnoAdminCore.Base.Repositories
         }
         public TEntity FindById(long id)
         {
-            return _context.Set<TEntity>().FirstOrDefault(x => x.Id == id && x.Deleted == 0);
+            return GetQuery().FirstOrDefault(x => x.Id == id);
         }
         public IEnumerable<TEntity> FindByIds(IEnumerable<long> ids)
         {
-            return _context.Set<TEntity>().OrderByDescending(x => x.Id).ToList();
+            return GetQuery().Where(x => ids.Contains(x.Id)).OrderByDescending(x => x.Id).ToList();
         }
         public TEntity Add(TEntity entity)
         {
@@ -90,7 +91,7 @@ namespace ArnoAdminCore.Base.Repositories
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            BaseEntity baseEntity = entity as BaseEntity;
+            ICreate baseEntity = entity as ICreate;
             if (baseEntity != null)
             {
                 baseEntity.Create();
@@ -104,7 +105,7 @@ namespace ArnoAdminCore.Base.Repositories
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            BaseEntity baseEntity = entity as BaseEntity;
+            IUpdate baseEntity = entity as IUpdate;
             if (baseEntity != null)
             {
                 baseEntity.Update();
@@ -118,7 +119,7 @@ namespace ArnoAdminCore.Base.Repositories
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            BaseEntity baseEntity = entity as BaseEntity;
+            IUpdate baseEntity = entity as IUpdate;
             if (baseEntity != null)
             {
                 baseEntity.Update();
@@ -177,6 +178,11 @@ namespace ArnoAdminCore.Base.Repositories
         public bool Save()
         {
             return _context.SaveChanges() > 0;
+        }
+
+        private IQueryable<TEntity> GetQuery()
+        {
+            return typeof(IDelete).IsAssignableFrom(typeof(TEntity)) ? _context.Set<TEntity>().Where(CreateDeleteExpression()) : _context.Set<TEntity>().AsQueryable();
         }
     }
 }
